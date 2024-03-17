@@ -5,10 +5,10 @@
   amazon.aws.lambda_event:
     state: absent
     event_source: stream
-    function_arn: '{{ lambda_function_arn }}'
+    function_arn: "{{ lambda_function_arn }}"
     source_params:
       source_arn: "{{ dynamo_stream_arn }}"
-      enabled: True
+      enabled: true
       batch_size: 500
       starting_position: LATEST
       function_response_types:
@@ -18,7 +18,7 @@
 
 - name: Delete lambda function
   lambda:
-    name: '{{ lambda_function_name }}'
+    name: "{{ lambda_function_name }}"
     state: absent
 
 - name: Delete dynamo table
@@ -28,6 +28,6 @@
 
 - name: Delete the role
   community.aws.iam_role:
-    name: '{{ lambda_role_name }}'
+    name: "{{ lambda_role_name }}"
     assume_role_policy_document: '{{ lookup("file", "minimal_trust_policy.json")}}'
     state: absent
