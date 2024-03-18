@@ -1,4 +1,5 @@
-  # ============================================================
+---
+# ============================================================
 # If we don't stop the instances they can get stuck "detaching"
 - name: Ensure test instances are stopped
   ec2_instance:
@@ -6,7 +7,7 @@
     instance_ids:
       - "{{ instance_id_1 }}"
       - "{{ instance_id_2 }}"
-    wait: True
+    wait: true
 
 - name: attach the network interface to instance 1 (check mode)
   ec2_eni:
@@ -15,7 +16,7 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: True
+    attached: true
   check_mode: true
   register: result_check_mode
 
@@ -30,10 +31,10 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: True
+    attached: true
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -59,7 +60,7 @@
       - '"status" in _interface_0.attachment'
       - _interface_0.attachment.status == "attached"
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 - name: verify the eni is attached
   ec2_eni:
@@ -68,10 +69,10 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: True
+    attached: true
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -96,9 +97,9 @@
       - '"status" in _interface_0.attachment'
       - _interface_0.attachment.status == "attached"
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
-  # ============================================================
+# ============================================================
 - name: test attaching the network interface to a different instance (check mode)
   ec2_eni:
     instance_id: "{{ instance_id_2 }}"
@@ -106,7 +107,7 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: True
+    attached: true
   check_mode: true
   register: result_check_mode
 
@@ -121,10 +122,10 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: True
+    attached: true
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -136,9 +137,9 @@
       - '"instance_id" in _interface_0.attachment'
       - _interface_0.attachment.instance_id == instance_id_2
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
-  # ============================================================
+# ============================================================
 - name: detach the network interface (check mode)
   ec2_eni:
     instance_id: "{{ instance_id_2 }}"
@@ -146,7 +147,7 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: False
+    attached: false
   check_mode: true
   register: result_check_mode
 
@@ -161,10 +162,10 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: False
+    attached: false
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -173,7 +174,7 @@
       - result.interface.attachment is undefined
       - _interface_0.attachment is undefined
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 - name: verify the network interface was detached
   ec2_eni:
@@ -182,7 +183,7 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: False
+    attached: false
   register: result
 
 - assert:
@@ -190,7 +191,7 @@
       - not result.changed
       - result.interface.attachment is undefined
 
-  # ============================================================
+# ============================================================
 - name: reattach the network interface to test deleting it
   ec2_eni:
     instance_id: "{{ instance_id_2 }}"
@@ -198,7 +199,7 @@
     private_ip_address: "{{ ip_1 }}"
     subnet_id: "{{ vpc_subnet_result.subnet.id }}"
     state: present
-    attached: True
+    attached: true
   register: result
 
 - assert:
@@ -212,7 +213,7 @@
     eni_id: "{{ eni_id_1 }}"
     state: absent
   register: result
-  ignore_errors: True
+  ignore_errors: true
 
 - assert:
     that:
@@ -225,16 +226,16 @@
     state: running
     instance_ids:
       - "{{ instance_id_2 }}"
-    wait: True
+    wait: true
 
 - name: delete an attached network interface with force_detach (check mode)
   ec2_eni:
-    force_detach: True
+    force_detach: true
     eni_id: "{{ eni_id_1 }}"
     state: absent
   check_mode: true
   register: result_check_mode
-  ignore_errors: True
+  ignore_errors: true
 
 - assert:
     that:
@@ -242,11 +243,11 @@
 
 - name: delete an attached network interface with force_detach
   ec2_eni:
-    force_detach: True
+    force_detach: true
     eni_id: "{{ eni_id_1 }}"
     state: absent
   register: result
-  ignore_errors: True
+  ignore_errors: true
 
 - assert:
     that:
@@ -255,7 +256,7 @@
 
 - name: test removing a network interface that does not exist
   ec2_eni:
-    force_detach: True
+    force_detach: true
     eni_id: "{{ eni_id_1 }}"
     state: absent
   register: result
