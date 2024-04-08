@@ -1,12 +1,12 @@
 ---
-- name: 'Run tagging tests'
+- name: Run tagging tests
   block:
     - set_fact:
         local_bucket_name: "{{ bucket_name | hash('md5')}}-tags"
     # ============================================================
-    - name: 'Create simple s3_bucket for testing tagging'
+    - name: Create simple s3_bucket for testing tagging
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
       register: output
 
@@ -17,9 +17,9 @@
 
     # ============================================================
 
-    - name: 'Add tags to s3 bucket'
+    - name: Add tags to s3 bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         tags:
           example: tag1
@@ -33,9 +33,9 @@
           - output.tags.example == 'tag1'
           - output.tags.another == 'tag2'
 
-    - name: 'Re-Add tags to s3 bucket'
+    - name: Re-Add tags to s3 bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         tags:
           example: tag1
@@ -53,7 +53,7 @@
 
     - name: Remove a tag from an s3_bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         tags:
           example: tag1
@@ -68,7 +68,7 @@
 
     - name: Re-remove the tag from an s3_bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         tags:
           example: tag1
@@ -90,11 +90,11 @@
 
     ## ============================================================
 
-    - name: 'Add a tag for s3_bucket with purge_tags False'
+    - name: Add a tag for s3_bucket with purge_tags False
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
-        purge_tags: no
+        purge_tags: false
         tags:
           anewtag: here
       register: output
@@ -106,11 +106,11 @@
           - output.tags.example == 'tag1'
           - output.tags.anewtag == 'here'
 
-    - name: 'Re-add a tag for s3_bucket with purge_tags False'
+    - name: Re-add a tag for s3_bucket with purge_tags False
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
-        purge_tags: no
+        purge_tags: false
         tags:
           anewtag: here
       register: output
@@ -133,9 +133,9 @@
 
     - name: Update a tag for s3_bucket with purge_tags False
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
-        purge_tags: no
+        purge_tags: false
         tags:
           anewtag: next
       register: output
@@ -149,9 +149,9 @@
 
     - name: Re-update a tag for s3_bucket with purge_tags False
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
-        purge_tags: no
+        purge_tags: false
         tags:
           anewtag: next
       register: output
@@ -174,9 +174,9 @@
 
     - name: Pass empty tags dict for s3_bucket with purge_tags False
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
-        purge_tags: no
+        purge_tags: false
         tags: {}
       register: output
 
@@ -198,7 +198,7 @@
 
     - name: Do not specify any tag to ensure previous tags are not removed
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
       register: output
 
@@ -212,7 +212,7 @@
 
     - name: Remove all tags
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         tags: {}
       register: output
@@ -225,7 +225,7 @@
 
     - name: Re-remove all tags
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         tags: {}
       register: output
@@ -240,7 +240,7 @@
 
     - name: Delete bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
       register: output
 
@@ -252,6 +252,6 @@
   always:
     - name: Ensure all buckets are deleted
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
-      ignore_errors: yes
+      ignore_errors: true
