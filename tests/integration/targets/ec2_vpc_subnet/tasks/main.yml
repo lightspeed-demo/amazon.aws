@@ -12,10 +12,10 @@
         name: "{{ resource_prefix }}-vpc"
         state: present
         cidr_block: "{{ vpc_cidr }}"
-        ipv6_cidr: True
+        ipv6_cidr: true
         tags:
           Name: "{{ resource_prefix }}-vpc"
-          Description: "Created by ansible-test"
+          Description: Created by ansible-test
       register: vpc_result
 
     - set_fact:
@@ -28,7 +28,7 @@
     - name: check subnet does not exist
       ec2_vpc_subnet_info:
         filters:
-          "tag:Name": '{{ec2_vpc_subnet_name}}'
+          tag:Name: "{{ec2_vpc_subnet_name}}"
       register: vpc_subnet_info
 
     - name: Assert info result is zero
@@ -42,8 +42,8 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
       check_mode: true
       register: vpc_subnet_create
@@ -59,50 +59,50 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
       register: vpc_subnet_create
 
     - name: assert creation happened (expected changed=true)
       assert:
         that:
-           - 'vpc_subnet_create'
-           - 'vpc_subnet_create.subnet.id.startswith("subnet-")'
-           - '"Name" in vpc_subnet_create.subnet.tags and vpc_subnet_create.subnet.tags["Name"] == ec2_vpc_subnet_name'
-           - '"Description" in vpc_subnet_create.subnet.tags and vpc_subnet_create.subnet.tags["Description"] == ec2_vpc_subnet_description'
+          - vpc_subnet_create
+          - vpc_subnet_create.subnet.id.startswith("subnet-")
+          - '"Name" in vpc_subnet_create.subnet.tags and vpc_subnet_create.subnet.tags["Name"] == ec2_vpc_subnet_name'
+          - '"Description" in vpc_subnet_create.subnet.tags and vpc_subnet_create.subnet.tags["Description"] == ec2_vpc_subnet_description'
 
     - name: get info about the subnet
       ec2_vpc_subnet_info:
-        subnet_ids: '{{ vpc_subnet_create.subnet.id }}'
+        subnet_ids: "{{ vpc_subnet_create.subnet.id }}"
       register: vpc_subnet_info
 
     - name: Assert info result matches create result
       assert:
         that:
-          - 'vpc_subnet_info.subnets | length == 1'
+          - vpc_subnet_info.subnets | length == 1
           - '"assign_ipv6_address_on_creation" in subnet_info'
-          - 'subnet_info.assign_ipv6_address_on_creation == False'
+          - subnet_info.assign_ipv6_address_on_creation == False
           - '"availability_zone" in subnet_info'
-          - 'subnet_info.availability_zone == availability_zone'
+          - subnet_info.availability_zone == availability_zone
           - '"available_ip_address_count" in subnet_info'
           - '"cidr_block" in subnet_info'
-          - 'subnet_info.cidr_block == subnet_cidr'
+          - subnet_info.cidr_block == subnet_cidr
           - '"default_for_az" in subnet_info'
           - '"id" in subnet_info'
-          - 'subnet_info.id == vpc_subnet_create.subnet.id'
+          - subnet_info.id == vpc_subnet_create.subnet.id
           - '"map_public_ip_on_launch" in subnet_info'
-          - 'subnet_info.map_public_ip_on_launch == False'
+          - subnet_info.map_public_ip_on_launch == False
           - '"state" in subnet_info'
           - '"subnet_id" in subnet_info'
-          - 'subnet_info.subnet_id == vpc_subnet_create.subnet.id'
+          - subnet_info.subnet_id == vpc_subnet_create.subnet.id
           - '"tags" in subnet_info'
-          - 'subnet_info.tags["Description"] == ec2_vpc_subnet_description'
-          - 'subnet_info.tags["Name"] == vpc_subnet_create.subnet.tags["Name"]'
+          - subnet_info.tags["Description"] == ec2_vpc_subnet_description
+          - subnet_info.tags["Name"] == vpc_subnet_create.subnet.tags["Name"]
           - '"vpc_id" in subnet_info'
-          - 'subnet_info.vpc_id == vpc_result.vpc.id'
+          - subnet_info.vpc_id == vpc_result.vpc.id
       vars:
-        subnet_info: '{{ vpc_subnet_info.subnets[0] }}'
+        subnet_info: "{{ vpc_subnet_info.subnets[0] }}"
 
     # ============================================================
     - name: recreate subnet (expected changed=false) (CHECK MODE)
@@ -111,8 +111,8 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
       check_mode: true
       register: vpc_subnet_recreate
@@ -120,7 +120,7 @@
     - name: assert recreation changed nothing (expected changed=false)
       assert:
         that:
-           - vpc_subnet_recreate is not changed
+          - vpc_subnet_recreate is not changed
 
     - name: recreate subnet (expected changed=false)
       ec2_vpc_subnet:
@@ -128,16 +128,16 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
       register: vpc_subnet_recreate
 
     - name: assert recreation changed nothing (expected changed=false)
       assert:
         that:
-           - vpc_subnet_recreate is not changed
-           - 'vpc_subnet_recreate.subnet == vpc_subnet_create.subnet'
+          - vpc_subnet_recreate is not changed
+          - vpc_subnet_recreate.subnet == vpc_subnet_create.subnet
 
     # ============================================================
     - name: update subnet so instances launched in it are assigned an IP (CHECK MODE)
@@ -146,8 +146,8 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
         map_public: true
       check_mode: true
@@ -164,8 +164,8 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
         map_public: true
       register: vpc_subnet_modify
@@ -184,17 +184,17 @@
         vpc_id: "{{ vpc_result.vpc.id }}"
         ipv6_cidr: 2001:db8::/64
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
       register: vpc_subnet_ipv6_failed
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: assert failure happened (expected failed)
       assert:
         that:
-           - vpc_subnet_ipv6_failed is failed
-           - "'Couldn\\'t associate ipv6 cidr' in vpc_subnet_ipv6_failed.msg"
+          - vpc_subnet_ipv6_failed is failed
+          - "'Couldn\\'t associate ipv6 cidr' in vpc_subnet_ipv6_failed.msg"
 
     # ============================================================
     - name: add a tag (expected changed=true) (CHECK MODE)
@@ -203,8 +203,8 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
           AnotherTag: SomeValue
         state: present
       check_mode: true
@@ -213,7 +213,7 @@
     - name: assert tag addition happened (expected changed=true)
       assert:
         that:
-           - vpc_subnet_add_a_tag is changed
+          - vpc_subnet_add_a_tag is changed
 
     - name: add a tag (expected changed=true)
       ec2_vpc_subnet:
@@ -221,8 +221,8 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
           AnotherTag: SomeValue
         state: present
       register: vpc_subnet_add_a_tag
@@ -230,21 +230,21 @@
     - name: assert tag addition happened (expected changed=true)
       assert:
         that:
-           - vpc_subnet_add_a_tag is changed
-           - '"Name" in vpc_subnet_add_a_tag.subnet.tags and vpc_subnet_add_a_tag.subnet.tags["Name"] == ec2_vpc_subnet_name'
-           - '"Description" in vpc_subnet_add_a_tag.subnet.tags and vpc_subnet_add_a_tag.subnet.tags["Description"] == ec2_vpc_subnet_description'
-           - '"AnotherTag" in vpc_subnet_add_a_tag.subnet.tags and vpc_subnet_add_a_tag.subnet.tags["AnotherTag"] == "SomeValue"'
+          - vpc_subnet_add_a_tag is changed
+          - '"Name" in vpc_subnet_add_a_tag.subnet.tags and vpc_subnet_add_a_tag.subnet.tags["Name"] == ec2_vpc_subnet_name'
+          - '"Description" in vpc_subnet_add_a_tag.subnet.tags and vpc_subnet_add_a_tag.subnet.tags["Description"] == ec2_vpc_subnet_description'
+          - '"AnotherTag" in vpc_subnet_add_a_tag.subnet.tags and vpc_subnet_add_a_tag.subnet.tags["AnotherTag"] == "SomeValue"'
 
     - name: Get info by tag
       ec2_vpc_subnet_info:
         filters:
-          "tag:Name": '{{ec2_vpc_subnet_name}}'
+          tag:Name: "{{ec2_vpc_subnet_name}}"
       register: vpc_subnet_info_by_tag
 
     - name: assert info matches expected output
       assert:
         that:
-          - 'vpc_subnet_info_by_tag.subnets[0].id == vpc_subnet_add_a_tag.subnet.id'
+          - vpc_subnet_info_by_tag.subnets[0].id == vpc_subnet_add_a_tag.subnet.id
           - (vpc_subnet_info_by_tag.subnets[0].tags|length) == 3
           - '"Description" in vpc_subnet_info_by_tag.subnets[0].tags and vpc_subnet_info_by_tag.subnets[0].tags["Description"] == ec2_vpc_subnet_description'
           - '"AnotherTag" in vpc_subnet_info_by_tag.subnets[0].tags and vpc_subnet_info_by_tag.subnets[0].tags["AnotherTag"] == "SomeValue"'
@@ -264,7 +264,7 @@
     - name: assert tag removal happened (expected changed=true)
       assert:
         that:
-           - vpc_subnet_remove_tags is changed
+          - vpc_subnet_remove_tags is changed
 
     - name: remove tags with default purge_tags=true (expected changed=true)
       ec2_vpc_subnet:
@@ -279,14 +279,14 @@
     - name: assert tag removal happened (expected changed=true)
       assert:
         that:
-           - vpc_subnet_remove_tags is changed
-           - '"Name" not in vpc_subnet_remove_tags.subnet.tags'
-           - '"Description" not in vpc_subnet_remove_tags.subnet.tags'
-           - '"AnotherTag" in vpc_subnet_remove_tags.subnet.tags and vpc_subnet_remove_tags.subnet.tags["AnotherTag"] == "SomeValue"'
+          - vpc_subnet_remove_tags is changed
+          - '"Name" not in vpc_subnet_remove_tags.subnet.tags'
+          - '"Description" not in vpc_subnet_remove_tags.subnet.tags'
+          - '"AnotherTag" in vpc_subnet_remove_tags.subnet.tags and vpc_subnet_remove_tags.subnet.tags["AnotherTag"] == "SomeValue"'
 
     - name: Check tags by info
       ec2_vpc_subnet_info:
-        subnet_id: '{{ vpc_subnet_remove_tags.subnet.id }}'
+        subnet_id: "{{ vpc_subnet_remove_tags.subnet.id }}"
       register: vpc_subnet_info_removed_tags
 
     - name: assert info matches expected output
@@ -296,7 +296,6 @@
           - '"Description" not in vpc_subnet_info_removed_tags.subnets[0].tags'
           - '"AnotherTag" in vpc_subnet_info_removed_tags.subnets[0].tags and vpc_subnet_info_removed_tags.subnets[0].tags["AnotherTag"] == "SomeValue"'
 
-
     # ============================================================
     - name: change tags with purge_tags=false (expected changed=true) (CHECK MODE)
       ec2_vpc_subnet:
@@ -304,8 +303,8 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
         purge_tags: false
       check_mode: true
@@ -314,7 +313,7 @@
     - name: assert tag addition happened (expected changed=true)
       assert:
         that:
-           - vpc_subnet_change_tags is changed
+          - vpc_subnet_change_tags is changed
 
     - name: change tags with purge_tags=false (expected changed=true)
       ec2_vpc_subnet:
@@ -322,8 +321,8 @@
         az: "{{ availability_zone }}"
         vpc_id: "{{ vpc_result.vpc.id }}"
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
         state: present
         purge_tags: false
       register: vpc_subnet_change_tags
@@ -331,10 +330,10 @@
     - name: assert tag addition happened (expected changed=true)
       assert:
         that:
-           - vpc_subnet_change_tags is changed
-           - '"Name" in vpc_subnet_change_tags.subnet.tags and vpc_subnet_change_tags.subnet.tags["Name"] == ec2_vpc_subnet_name'
-           - '"Description" in vpc_subnet_change_tags.subnet.tags and vpc_subnet_change_tags.subnet.tags["Description"] == ec2_vpc_subnet_description'
-           - '"AnotherTag" in vpc_subnet_change_tags.subnet.tags and vpc_subnet_change_tags.subnet.tags["AnotherTag"] == "SomeValue"'
+          - vpc_subnet_change_tags is changed
+          - '"Name" in vpc_subnet_change_tags.subnet.tags and vpc_subnet_change_tags.subnet.tags["Name"] == ec2_vpc_subnet_name'
+          - '"Description" in vpc_subnet_change_tags.subnet.tags and vpc_subnet_change_tags.subnet.tags["Description"] == ec2_vpc_subnet_description'
+          - '"AnotherTag" in vpc_subnet_change_tags.subnet.tags and vpc_subnet_change_tags.subnet.tags["AnotherTag"] == "SomeValue"'
 
     # ============================================================
     - name: test state=absent (expected changed=true) (CHECK MODE)
@@ -348,7 +347,7 @@
     - name: assert state=absent (expected changed=true)
       assert:
         that:
-           - result is changed
+          - result is changed
 
     - name: test state=absent (expected changed=true)
       ec2_vpc_subnet:
@@ -360,7 +359,7 @@
     - name: assert state=absent (expected changed=true)
       assert:
         that:
-           - result is changed
+          - result is changed
 
     # ============================================================
     - name: test state=absent (expected changed=false) (CHECK MODE)
@@ -374,7 +373,7 @@
     - name: assert state=absent (expected changed=false)
       assert:
         that:
-           - result is not changed
+          - result is not changed
 
     - name: test state=absent (expected changed=false)
       ec2_vpc_subnet:
@@ -386,7 +385,7 @@
     - name: assert state=absent (expected changed=false)
       assert:
         that:
-           - result is not changed
+          - result is not changed
 
     # ============================================================
     - name: create subnet without AZ (CHECK MODE)
@@ -400,7 +399,7 @@
     - name: check that subnet without AZ works fine
       assert:
         that:
-           - subnet_without_az is changed
+          - subnet_without_az is changed
 
     - name: create subnet without AZ
       ec2_vpc_subnet:
@@ -412,7 +411,7 @@
     - name: check that subnet without AZ works fine
       assert:
         that:
-           - subnet_without_az is changed
+          - subnet_without_az is changed
 
     # ============================================================
     - name: remove subnet without AZ (CHECK MODE)
@@ -426,7 +425,7 @@
     - name: assert state=absent (expected changed=true)
       assert:
         that:
-           - result is changed
+          - result is changed
 
     - name: remove subnet without AZ
       ec2_vpc_subnet:
@@ -438,8 +437,7 @@
     - name: assert state=absent (expected changed=true)
       assert:
         that:
-           - result is changed
-
+          - result is changed
 
     # ============================================================
     - name: create subnet with IPv6 (expected changed=true) (CHECK MODE)
@@ -450,15 +448,15 @@
         assign_instances_ipv6: true
         state: present
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
       check_mode: true
       register: vpc_subnet_ipv6_create
 
     - name: assert creation with IPv6 happened (expected changed=true)
       assert:
         that:
-           - vpc_subnet_ipv6_create is changed
+          - vpc_subnet_ipv6_create is changed
 
     - name: create subnet with IPv6 (expected changed=true)
       ec2_vpc_subnet:
@@ -468,19 +466,19 @@
         assign_instances_ipv6: true
         state: present
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
       register: vpc_subnet_ipv6_create
 
     - name: assert creation with IPv6 happened (expected changed=true)
       assert:
         that:
-           - vpc_subnet_ipv6_create is changed
-           - 'vpc_subnet_ipv6_create.subnet.id.startswith("subnet-")'
-           - "vpc_subnet_ipv6_create.subnet.ipv6_cidr_block == subnet_ipv6_cidr"
-           - '"Name" in vpc_subnet_ipv6_create.subnet.tags and vpc_subnet_ipv6_create.subnet.tags["Name"] == ec2_vpc_subnet_name'
-           - '"Description" in vpc_subnet_ipv6_create.subnet.tags and vpc_subnet_ipv6_create.subnet.tags["Description"] == ec2_vpc_subnet_description'
-           - 'vpc_subnet_ipv6_create.subnet.assign_ipv6_address_on_creation'
+          - vpc_subnet_ipv6_create is changed
+          - vpc_subnet_ipv6_create.subnet.id.startswith("subnet-")
+          - vpc_subnet_ipv6_create.subnet.ipv6_cidr_block == subnet_ipv6_cidr
+          - '"Name" in vpc_subnet_ipv6_create.subnet.tags and vpc_subnet_ipv6_create.subnet.tags["Name"] == ec2_vpc_subnet_name'
+          - '"Description" in vpc_subnet_ipv6_create.subnet.tags and vpc_subnet_ipv6_create.subnet.tags["Description"] == ec2_vpc_subnet_description'
+          - vpc_subnet_ipv6_create.subnet.assign_ipv6_address_on_creation
 
     # ============================================================
     - name: recreate subnet (expected changed=false) (CHECK MODE)
@@ -491,15 +489,15 @@
         assign_instances_ipv6: true
         state: present
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
       check_mode: true
       register: vpc_subnet_ipv6_recreate
 
     - name: assert recreation changed nothing (expected changed=false)
       assert:
         that:
-           - vpc_subnet_ipv6_recreate is not changed
+          - vpc_subnet_ipv6_recreate is not changed
 
     - name: recreate subnet (expected changed=false)
       ec2_vpc_subnet:
@@ -509,15 +507,15 @@
         assign_instances_ipv6: true
         state: present
         tags:
-          Name: '{{ec2_vpc_subnet_name}}'
-          Description: '{{ec2_vpc_subnet_description}}'
+          Name: "{{ec2_vpc_subnet_name}}"
+          Description: "{{ec2_vpc_subnet_description}}"
       register: vpc_subnet_ipv6_recreate
 
     - name: assert recreation changed nothing (expected changed=false)
       assert:
         that:
-           - vpc_subnet_ipv6_recreate is not changed
-           - 'vpc_subnet_ipv6_recreate.subnet == vpc_subnet_ipv6_create.subnet'
+          - vpc_subnet_ipv6_recreate is not changed
+          - vpc_subnet_ipv6_recreate.subnet == vpc_subnet_ipv6_create.subnet
 
     # ============================================================
     - name: change subnet assign_instances_ipv6 attribute (expected changed=true) (CHECK MODE)
@@ -534,7 +532,7 @@
     - name: assert assign_instances_ipv6 attribute changed (expected changed=true)
       assert:
         that:
-           - vpc_change_attribute is changed
+          - vpc_change_attribute is changed
 
     - name: change subnet assign_instances_ipv6 attribute (expected changed=true)
       ec2_vpc_subnet:
@@ -549,8 +547,8 @@
     - name: assert assign_instances_ipv6 attribute changed (expected changed=true)
       assert:
         that:
-           - vpc_change_attribute is changed
-           - 'not vpc_change_attribute.subnet.assign_ipv6_address_on_creation'
+          - vpc_change_attribute is changed
+          - not vpc_change_attribute.subnet.assign_ipv6_address_on_creation
 
     # ============================================================
     - name: add second subnet with duplicate ipv6 cidr (expected failure)
@@ -566,8 +564,8 @@
     - name: assert graceful failure (expected failed)
       assert:
         that:
-           - vpc_add_duplicate_ipv6 is failed
-           - "'The IPv6 CIDR \\'{{ subnet_ipv6_cidr }}\\' conflicts with another subnet' in vpc_add_duplicate_ipv6.msg"
+          - vpc_add_duplicate_ipv6 is failed
+          - "'The IPv6 CIDR \\'{{ subnet_ipv6_cidr }}\\' conflicts with another subnet' in vpc_add_duplicate_ipv6.msg"
 
     # ============================================================
     - name: remove subnet ipv6 cidr (expected changed=true) (CHECK MODE)
@@ -582,7 +580,7 @@
     - name: assert subnet ipv6 cidr removed (expected changed=true)
       assert:
         that:
-           - vpc_remove_ipv6_cidr is changed
+          - vpc_remove_ipv6_cidr is changed
 
     - name: remove subnet ipv6 cidr (expected changed=true)
       ec2_vpc_subnet:
@@ -595,9 +593,9 @@
     - name: assert subnet ipv6 cidr removed (expected changed=true)
       assert:
         that:
-           - vpc_remove_ipv6_cidr is changed
-           - "vpc_remove_ipv6_cidr.subnet.ipv6_cidr_block == ''"
-           - 'not vpc_remove_ipv6_cidr.subnet.assign_ipv6_address_on_creation'
+          - vpc_remove_ipv6_cidr is changed
+          - vpc_remove_ipv6_cidr.subnet.ipv6_cidr_block == ''
+          - not vpc_remove_ipv6_cidr.subnet.assign_ipv6_address_on_creation
 
     # ============================================================
     - name: test adding a tag that looks like a boolean to the subnet (CHECK MODE)
@@ -630,7 +628,7 @@
       assert:
         that:
           - vpc_subnet_info is changed
-          - 'vpc_subnet_info.subnet.tags.looks_like_boolean == "True"'
+          - vpc_subnet_info.subnet.tags.looks_like_boolean == "True"
 
     # ============================================================
     - name: test idempotence adding a tag that looks like a boolean (CHECK MODE)
@@ -665,7 +663,6 @@
           - vpc_subnet_info is not changed
 
   always:
-
     ################################################
     # TEARDOWN STARTS HERE
     ################################################
