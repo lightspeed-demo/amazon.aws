@@ -1,14 +1,14 @@
 ---
-- name: 'Run simple tests'
+- name: Run simple tests
   block:
     - set_fact:
         local_bucket_name: "{{ bucket_name | hash('md5')}}-simple"
     # Note: s3_bucket doesn't support check_mode
 
     # ============================================================
-    - name: 'Create a simple s3_bucket'
+    - name: Create a simple s3_bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
       register: output
 
@@ -21,9 +21,9 @@
           - output.public_access is undefined
 
     # ============================================================
-    - name: 'Try to update the simple bucket with the same values'
+    - name: Try to update the simple bucket with the same values
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
       register: output
 
@@ -35,9 +35,9 @@
           - not output.requester_pays
 
     # ============================================================
-    - name: 'Delete the simple s3_bucket'
+    - name: Delete the simple s3_bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
       register: output
 
@@ -47,9 +47,9 @@
           - output is changed
 
     # ============================================================
-    - name: 'Re-delete the simple s3_bucket (idempotency)'
+    - name: Re-delete the simple s3_bucket (idempotency)
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
       register: output
 
@@ -60,8 +60,8 @@
 
   # ============================================================
   always:
-    - name: 'Ensure all buckets are deleted'
+    - name: Ensure all buckets are deleted
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
-      ignore_errors: yes
+      ignore_errors: true
