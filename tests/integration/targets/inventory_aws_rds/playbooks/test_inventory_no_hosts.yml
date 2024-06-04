@@ -1,7 +1,7 @@
 ---
 - hosts: 127.0.0.1
   connection: local
-  gather_facts: no
+  gather_facts: false
   environment: "{{ ansible_test.environment }}"
   collections:
     - amazon.aws
@@ -11,4 +11,4 @@
       assert:
         that:
           - "'aws_rds' in groups"
-          - "not groups.aws_rds"
+          - not groups.aws_rds
