@@ -1,3 +1,4 @@
+---
 # (c) 2014, James Laska <jlaska@ansible.com>
 
 # This file is part of Ansible
@@ -25,17 +26,17 @@
 - name: ensure script is available
   copy:
     src: ec2-fingerprint.py
-    dest: '{{ sshkey_dir.path }}/ec2-fingerprint.py'
-    mode: 0700
+    dest: "{{ sshkey_dir.path }}/ec2-fingerprint.py"
+    mode: "0700"
   tags:
     - prepare
 
 - name: Set location of SSH keys
   set_fact:
-    sshkey: '{{ sshkey_dir.path }}/key_one'
-    another_sshkey: '{{ sshkey_dir.path }}/key_two'
-    sshkey_pub: '{{ sshkey_dir.path }}/key_one.pub'
-    another_sshkey_pub: '{{ sshkey_dir.path }}/key_two.pub'
+    sshkey: "{{ sshkey_dir.path }}/key_one"
+    another_sshkey: "{{ sshkey_dir.path }}/key_two"
+    sshkey_pub: "{{ sshkey_dir.path }}/key_one.pub"
+    another_sshkey_pub: "{{ sshkey_dir.path }}/key_two.pub"
 
 - name: generate sshkey
   shell: echo 'y' | ssh-keygen -P '' -f '{{ sshkey }}'
@@ -43,7 +44,7 @@
     - prepare
 
 - name: record fingerprint
-  shell: '{{ sshkey_dir.path }}/ec2-fingerprint.py {{ sshkey_pub }}'
+  shell: "{{ sshkey_dir.path }}/ec2-fingerprint.py {{ sshkey_pub }}"
   register: fingerprint
   tags:
     - prepare
@@ -54,7 +55,7 @@
     - prepare
 
 - name: record another fingerprint
-  shell: '{{ sshkey_dir.path }}/ec2-fingerprint.py {{ another_sshkey_pub }}'
+  shell: "{{ sshkey_dir.path }}/ec2-fingerprint.py {{ another_sshkey_pub }}"
   register: another_fingerprint
   tags:
     - prepare
@@ -65,7 +66,7 @@
     key_material: "{{ lookup('file', sshkey_pub) }}"
     another_key_material: "{{ lookup('file', another_sshkey_pub) }}"
     # AWS 'fingerprint' (md5digest)
-    fingerprint: '{{ fingerprint.stdout }}'
-    another_fingerprint: '{{ another_fingerprint.stdout }}'
+    fingerprint: "{{ fingerprint.stdout }}"
+    another_fingerprint: "{{ another_fingerprint.stdout }}"
   tags:
     - prepare
