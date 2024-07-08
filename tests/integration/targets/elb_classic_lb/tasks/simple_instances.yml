@@ -17,7 +17,7 @@
 
 - name: Wait for instance a
   ec2_instance:
-    name: "ansible-test-{{ tiny_prefix }}-elb-a"
+    name: ansible-test-{{ tiny_prefix }}-elb-a
     instance_ids:
       - "{{ instance_a }}"
     vpc_subnet_id: "{{ subnet_a }}"
@@ -28,7 +28,7 @@
 
 - name: Wait for instance b
   ec2_instance:
-    name: "ansible-test-{{ tiny_prefix }}-elb-b"
+    name: ansible-test-{{ tiny_prefix }}-elb-b
     instance_ids:
       - "{{ instance_b }}"
     vpc_subnet_id: "{{ subnet_b }}"
@@ -49,7 +49,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
+      - "{{ instance_a }}"
     wait: true
   register: result
   check_mode: true
@@ -63,7 +63,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
+      - "{{ instance_a }}"
     wait: true
   register: result
 
@@ -78,7 +78,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
+      - "{{ instance_a }}"
     wait: true
   register: result
   check_mode: true
@@ -92,7 +92,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
+      - "{{ instance_a }}"
     wait: true
   register: result
 
@@ -109,7 +109,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: false
   register: result
   check_mode: true
@@ -123,7 +123,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: false
   register: result
 
@@ -138,7 +138,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: false
   register: result
   check_mode: true
@@ -152,7 +152,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: false
   register: result
 
@@ -169,8 +169,8 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
-    - '{{ instance_b }}'
+      - "{{ instance_a }}"
+      - "{{ instance_b }}"
     purge_instance_ids: true
   register: result
   check_mode: true
@@ -184,8 +184,8 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
-    - '{{ instance_b }}'
+      - "{{ instance_a }}"
+      - "{{ instance_b }}"
     purge_instance_ids: true
   register: result
 
@@ -200,8 +200,8 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
-    - '{{ instance_a }}'
+      - "{{ instance_b }}"
+      - "{{ instance_a }}"
     purge_instance_ids: true
   register: result
   check_mode: true
@@ -215,8 +215,8 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
-    - '{{ instance_a }}'
+      - "{{ instance_b }}"
+      - "{{ instance_a }}"
     purge_instance_ids: true
   register: result
 
@@ -233,7 +233,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: true
     wait: true
   register: result
@@ -248,7 +248,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: true
     wait: true
   register: result
@@ -264,7 +264,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: true
     wait: true
   register: result
@@ -279,7 +279,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: true
     wait: true
   register: result
@@ -297,7 +297,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
+      - "{{ instance_a }}"
     purge_instance_ids: true
     wait: true
   register: result
@@ -312,7 +312,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
+      - "{{ instance_a }}"
     purge_instance_ids: true
     wait: true
   register: result
@@ -328,7 +328,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
+      - "{{ instance_a }}"
     purge_instance_ids: true
     wait: true
   register: result
@@ -343,7 +343,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_a }}'
+      - "{{ instance_a }}"
     purge_instance_ids: true
     wait: true
   register: result
@@ -361,7 +361,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: true
   register: result
   check_mode: true
@@ -375,7 +375,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: true
   register: result
 
@@ -390,7 +390,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: true
   register: result
   check_mode: true
@@ -404,7 +404,7 @@
     name: "{{ elb_name }}"
     state: present
     instance_ids:
-    - '{{ instance_b }}'
+      - "{{ instance_b }}"
     purge_instance_ids: true
   register: result
 
