@@ -9,9 +9,9 @@
     - set_fact:
         local_bucket_name: "{{ bucket_name | hash('md5')}}ownership"
 
-    - name: 'Create a simple bucket bad value for ownership controls'
+    - name: Create a simple bucket bad value for ownership controls
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         object_ownership: default
       ignore_errors: true
@@ -21,9 +21,9 @@
         that:
           - output.failed
 
-    - name: 'Create bucket with object_ownership set to object_writer'
+    - name: Create bucket with object_ownership set to object_writer
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
       ignore_errors: true
       register: output
@@ -35,12 +35,12 @@
 
     - name: delete s3 bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
 
-    - name: 'create s3 bucket with object ownership controls'
+    - name: create s3 bucket with object ownership controls
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         object_ownership: ObjectWriter
       register: output
@@ -51,9 +51,9 @@
           - output.object_ownership
           - output.object_ownership == 'ObjectWriter'
 
-    - name: 'update s3 bucket ownership preferred controls'
+    - name: update s3 bucket ownership preferred controls
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         object_ownership: BucketOwnerPreferred
       register: output
@@ -64,9 +64,9 @@
           - output.object_ownership
           - output.object_ownership == 'BucketOwnerPreferred'
 
-    - name: 'test idempotency update s3 bucket ownership preferred controls'
+    - name: test idempotency update s3 bucket ownership preferred controls
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         object_ownership: BucketOwnerPreferred
       register: output
@@ -77,9 +77,9 @@
           - output.object_ownership
           - output.object_ownership == 'BucketOwnerPreferred'
 
-    - name: 'update s3 bucket ownership enforced controls'
+    - name: update s3 bucket ownership enforced controls
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         object_ownership: BucketOwnerEnforced
       register: output
@@ -90,9 +90,9 @@
           - output.object_ownership
           - output.object_ownership == 'BucketOwnerEnforced'
 
-    - name: 'test idempotency update s3 bucket ownership preferred controls'
+    - name: test idempotency update s3 bucket ownership preferred controls
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         object_ownership: BucketOwnerEnforced
       register: output
@@ -103,9 +103,9 @@
           - output.object_ownership
           - output.object_ownership == 'BucketOwnerEnforced'
 
-    - name: 'delete s3 bucket ownership controls'
+    - name: delete s3 bucket ownership controls
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         delete_object_ownership: true
       register: output
@@ -115,9 +115,9 @@
           - output.changed
           - not output.object_ownership|bool
 
-    - name: 'delete s3 bucket ownership controls once again (idempotency)'
+    - name: delete s3 bucket ownership controls once again (idempotency)
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         delete_object_ownership: true
       register: idempotency
@@ -131,13 +131,13 @@
   always:
     - name: delete s3 bucket ownership controls
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         delete_object_ownership: true
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Ensure all buckets are deleted
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
-      ignore_errors: yes
+      ignore_errors: true
