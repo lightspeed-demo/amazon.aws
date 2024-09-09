@@ -1,3 +1,4 @@
+---
 - name: delete bucket at the end of Integration tests
   block:
     - name: list bucket object
