@@ -1,3 +1,4 @@
+---
 - name: make sure we have the ansible_os_family and ansible_distribution_version facts
   setup:
     gather_subset: distribution
@@ -7,4 +8,4 @@
   vars:
     files:
       - "{{ ansible_os_family | lower }}.yml"
-      - "default.yml"
+      - default.yml

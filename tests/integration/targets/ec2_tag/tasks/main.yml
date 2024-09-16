@@ -132,5 +132,5 @@
         state: absent
       register: result
       until: result is not failed
-      ignore_errors: yes
+      ignore_errors: true
       retries: 10
