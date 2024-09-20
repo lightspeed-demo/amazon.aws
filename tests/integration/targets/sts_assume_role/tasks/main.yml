@@ -3,10 +3,10 @@
 
 - module_defaults:
     group/aws:
-        region: "{{ aws_region }}"
-        access_key: "{{ aws_access_key }}"
-        secret_key: "{{ aws_secret_key }}"
-        session_token: "{{ security_token | default(omit) }}"
+      region: "{{ aws_region }}"
+      access_key: "{{ aws_access_key }}"
+      secret_key: "{{ aws_secret_key }}"
+      session_token: "{{ security_token | default(omit) }}"
   collections:
     - amazon.aws
   block:
@@ -24,8 +24,8 @@
     - name: create test iam role
       iam_role:
         name: "{{ iam_role_name }}"
-        assume_role_policy_document:  "{{ lookup('template','policy.json.j2') }}"
-        create_instance_profile: False
+        assume_role_policy_document: "{{ lookup('template','policy.json.j2') }}"
+        create_instance_profile: false
         managed_policy:
           - arn:aws:iam::aws:policy/IAMReadOnlyAccess
         state: present
@@ -39,17 +39,17 @@
     # ============================================================
     - name: test with no parameters
       sts_assume_role:
-        access_key: '{{ omit }}'
-        secret_key: '{{ omit }}'
-        session_token: '{{ omit }}'
+        access_key: "{{ omit }}"
+        secret_key: "{{ omit }}"
+        session_token: "{{ omit }}"
       register: result
       ignore_errors: true
 
     - name: assert with no parameters
       assert:
         that:
-           - 'result.failed'
-           - "'missing required arguments:' in result.msg"
+          - result.failed
+          - "'missing required arguments:' in result.msg"
 
     # ============================================================
     - name: test with only 'role_arn' parameter
@@ -61,42 +61,42 @@
     - name: assert with only 'role_arn' parameter
       assert:
         that:
-           - 'result.failed'
-           - "'missing required arguments: role_session_name' in result.msg"
+          - result.failed
+          - "'missing required arguments: role_session_name' in result.msg"
 
     # ============================================================
     - name: test with only 'role_session_name' parameter
       sts_assume_role:
-        role_session_name: "AnsibleTest"
+        role_session_name: AnsibleTest
       register: result
       ignore_errors: true
 
     - name: assert with only 'role_session_name' parameter
       assert:
         that:
-           - 'result.failed'
-           - "'missing required arguments: role_arn' in result.msg"
+          - result.failed
+          - "'missing required arguments: role_arn' in result.msg"
 
     # ============================================================
     - name: test assume role with invalid policy
       sts_assume_role:
         role_arn: "{{ test_role.iam_role.arn }}"
-        role_session_name: "AnsibleTest"
-        policy: "invalid policy"
+        role_session_name: AnsibleTest
+        policy: invalid policy
       register: result
       ignore_errors: true
 
     - name: assert assume role with invalid policy
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'The policy is not in the valid JSON format.' in result.msg"
       when: result.module_stderr is not defined
 
     - name: assert assume role with invalid policy
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'The policy is not in the valid JSON format.' in result.module_stderr"
       when: result.module_stderr is defined
 
@@ -128,14 +128,14 @@
     - name: assert assume role with invalid external id
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'Member must satisfy regular expression pattern:' in result.msg"
       when: result.module_stderr is not defined
 
     - name: assert assume role with invalid external id
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'Member must satisfy regular expression pattern:' in result.module_stderr"
       when: result.module_stderr is defined
 
@@ -151,14 +151,14 @@
     - name: assert assume role with invalid mfa serial number
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'Member must satisfy regular expression pattern:' in result.msg"
       when: result.module_stderr is not defined
 
     - name: assert assume role with invalid mfa serial number
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'Member must satisfy regular expression pattern:' in result.module_stderr"
       when: result.module_stderr is defined
 
@@ -174,14 +174,14 @@
     - name: assert assume role with invalid mfa token code
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'Member must satisfy regular expression pattern:' in result.msg"
       when: result.module_stderr is not defined
 
     - name: assert assume role with invalid mfa token code
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'Member must satisfy regular expression pattern:' in result.module_stderr"
       when: result.module_stderr is defined
 
@@ -203,29 +203,29 @@
     - name: assert assume role with invalid role_arn
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'Member must have length greater than or equal to 20' in result.module_stderr"
       when: result.module_stderr is defined
 
     # ============================================================
     - name: test assume not existing sts role
       sts_assume_role:
-        role_arn: "arn:aws:iam::123456789:role/non-existing-role"
-        role_session_name: "AnsibleTest"
+        role_arn: arn:aws:iam::123456789:role/non-existing-role
+        role_session_name: AnsibleTest
       register: result
       ignore_errors: true
 
     - name: assert assume not existing sts role
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'is not authorized to perform: sts:AssumeRole' in result.msg"
       when: result.module_stderr is not defined
 
     - name: assert assume not existing sts role
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'is not authorized to perform: sts:AssumeRole' in result.msg"
       when: result.module_stderr is defined
 
@@ -239,11 +239,11 @@
     - name: assert assume role
       assert:
         that:
-           - 'not assumed_role.failed'
-           - "'sts_creds' in assumed_role"
-           - "'access_key' in assumed_role.sts_creds"
-           - "'secret_key' in assumed_role.sts_creds"
-           - "'session_token' in assumed_role.sts_creds"
+          - not assumed_role.failed
+          - "'sts_creds' in assumed_role"
+          - "'access_key' in assumed_role.sts_creds"
+          - "'secret_key' in assumed_role.sts_creds"
+          - "'session_token' in assumed_role.sts_creds"
 
     # ============================================================
     - name: test that assumed credentials have IAM read-only access
@@ -253,15 +253,15 @@
         session_token: "{{ assumed_role.sts_creds.session_token }}"
         name: "{{ iam_role_name }}"
         assume_role_policy_document: "{{ lookup('template','policy.json.j2') }}"
-        create_instance_profile: False
+        create_instance_profile: false
         state: present
       register: result
 
     - name: assert assumed role with privileged action (expect changed=false)
       assert:
         that:
-          - 'not result.failed'
-          - 'not result.changed'
+          - not result.failed
+          - not result.changed
           - "'iam_role' in result"
 
     # ============================================================
@@ -279,7 +279,7 @@
     - name: assert assumed role with unprivileged action (expect changed=false)
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'is not authorized to perform: iam:CreateRole' in result.msg"
       # runs on Python2
       when: result.module_stderr is not defined
@@ -287,19 +287,18 @@
     - name: assert assumed role with unprivileged action (expect changed=false)
       assert:
         that:
-          - 'result.failed'
+          - result.failed
           - "'is not authorized to perform: iam:CreateRole' in result.module_stderr"
       # runs on Python3
       when: result.module_stderr is defined
 
-    # ============================================================
+  # ============================================================
   always:
-
     - name: delete test iam role
       iam_role:
         name: "{{ iam_role_name }}"
-        assume_role_policy_document:  "{{ lookup('template','policy.json.j2') }}"
-        delete_instance_profile: True
+        assume_role_policy_document: "{{ lookup('template','policy.json.j2') }}"
+        delete_instance_profile: true
         managed_policy:
           - arn:aws:iam::aws:policy/IAMReadOnlyAccess
         state: absent
