@@ -23,7 +23,7 @@
     secondary_private_ip_address_count: 2
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -34,7 +34,7 @@
       - _interface_0.private_ip_addresses | length == 3
       - ip_1 in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 - name: test idempotence with two implicit secondary IPs (check mode)
   ec2_eni:
@@ -59,7 +59,7 @@
     secondary_private_ip_address_count: 2
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -70,7 +70,7 @@
       - _interface_0.private_ip_addresses | length == 3
       - ip_1 in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 # ============================================================
 - name: ensure secondary addresses are only removed if purge is set to true
@@ -83,7 +83,7 @@
     secondary_private_ip_addresses: []
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -94,7 +94,7 @@
       - _interface_0.private_ip_addresses | length == 3
       - ip_1 in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 # ============================================================
 
@@ -120,7 +120,7 @@
       - "{{ new_secondary_ip }}"
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -133,7 +133,7 @@
       - ip_1 in _private_ips
       - new_secondary_ip in _private_ips
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
     _private_ips: "{{ eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list }}"
 
 # ============================================================
@@ -162,7 +162,7 @@
     secondary_private_ip_addresses: []
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -173,7 +173,7 @@
       - _interface_0.private_ip_addresses | length == 1
       - ip_1 in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 - name: test idempotent behavior purging secondary addresses (check mode)
   ec2_eni:
@@ -200,7 +200,7 @@
     secondary_private_ip_addresses: []
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - assert:
@@ -212,7 +212,7 @@
       - _interface_0.private_ip_addresses | length == 1
       - ip_1 in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 # ============================================================
 
@@ -226,7 +226,7 @@
       - "{{ ip_4 }}"
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_2 }}'
+    eni_id: "{{ eni_id_2 }}"
   register: eni_info
 
 - assert:
@@ -238,7 +238,7 @@
       - ip_5 in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
       - ip_4 in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 - name: test that reassignment of an IP already in use fails when not explcitly allowed (default for allow_reassignment == False)
   ec2_eni:
@@ -251,7 +251,7 @@
       - "{{ ip_3 }}"
       - "{{ ip_4 }}"
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 
 - assert:
     that:
@@ -308,13 +308,13 @@
     secondary_private_ip_addresses: []
   register: result
 - ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
   until: _interface_0.private_ip_addresses | length == 1
   retries: 5
   delay: 2
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
 
 - assert:
     that:
@@ -322,4 +322,4 @@
       - _interface_0.private_ip_addresses | length == 1
       - ip_1 in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
