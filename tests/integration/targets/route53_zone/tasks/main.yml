@@ -1,15 +1,14 @@
 ---
-- name: 'route53_zone integration tests'
+- name: route53_zone integration tests
   collections:
     - amazon.aws
   module_defaults:
     group/aws:
-      access_key: '{{ aws_access_key }}'
-      secret_key: '{{ aws_secret_key }}'
-      session_token: '{{ security_token | default(omit) }}'
-      region: '{{ aws_region }}'
+      access_key: "{{ aws_access_key }}"
+      secret_key: "{{ aws_secret_key }}"
+      session_token: "{{ security_token | default(omit) }}"
+      region: "{{ aws_region }}"
   block:
-
     # ============================================================
 
     - name: Create VPC for use in testing
@@ -51,7 +50,7 @@
           TestTag: "{{ resource_prefix }}"
           another_tag: "{{ resource_prefix }} again"
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -91,7 +90,7 @@
           TestTag: "{{ resource_prefix }}"
           another_tag: "{{ resource_prefix }} again"
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -143,7 +142,7 @@
         purge_tags: true
         tags: {}
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -157,7 +156,7 @@
         zone: "{{ resource_prefix }}.public"
         state: absent
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -184,7 +183,7 @@
         comment: original comment
         state: present
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -225,7 +224,7 @@
         comment: original comment
         state: present
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -255,7 +254,7 @@
         comment: updated_comment check
         state: present
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -272,19 +271,19 @@
     - assert:
         that:
           - not output.changed
-          - "output.result == 'No zone to delete.'"
+          - output.result == 'No zone to delete.'
 
     - name: Try to delete private zone without setting vpc_id and vpc_region (CHECK MODE)
       route53_zone:
         zone: "{{ resource_prefix }}.private"
         state: absent
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
           - not output.changed
-          - "output.result == 'No zone to delete.'"
+          - output.result == 'No zone to delete.'
 
     # ============================================================
     - name: Try to delete a public zone that does not exists
@@ -297,7 +296,7 @@
     - assert:
         that:
           - not output.changed
-          - "output.result == 'No zone to delete.'"
+          - output.result == 'No zone to delete.'
 
     - name: Try to delete a public zone that does not exists (CHECK MODE)
       route53_zone:
@@ -305,12 +304,12 @@
         comment: original comment
         state: absent
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
           - not output.changed
-          - "output.result == 'No zone to delete.'"
+          - output.result == 'No zone to delete.'
 
     # ============================================================
     - name: Delete private zone (CHECK MODE)
@@ -320,7 +319,7 @@
         zone: "{{ resource_prefix }}.private"
         state: absent
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -350,7 +349,7 @@
         comment: original comment
         state: present
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -380,7 +379,7 @@
         comment: original comment
         state: present
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -412,7 +411,7 @@
         comment: new comment
         state: present
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -441,7 +440,7 @@
         zone: "{{ resource_prefix }}.private"
         state: absent
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -479,7 +478,7 @@
             comment: original comment
             state: present
           register: output
-          check_mode: yes
+          check_mode: true
 
         - assert:
             that:
@@ -500,7 +499,7 @@
         - assert:
             that:
               - output.changed
-              - output.vpc_id == testing_vpc.vpc.id  # The first one for backwards compatibility
+              - output.vpc_id == testing_vpc.vpc.id # The first one for backwards compatibility
               - output.vpc_region == aws_region
               - (output.vpcs | length) == 2
               - output.vpcs.1.id == second_testing_vpc.vpc.id
@@ -517,7 +516,7 @@
             zone: "{{ resource_prefix }}.private"
             state: absent
           register: output
-          check_mode: yes
+          check_mode: true
 
         - assert:
             that:
@@ -562,7 +561,7 @@
         hosted_zone_id: "{{new_zone.zone_id}}"
         state: absent
       register: output
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -589,7 +588,7 @@
         state: absent
       register: removed
       until: removed is not failed
-      ignore_errors: yes
+      ignore_errors: true
       retries: 10
       with_items:
         - "{{ resource_prefix }}.public"
@@ -603,7 +602,7 @@
         state: absent
       register: removed
       until: removed is not failed
-      ignore_errors: yes
+      ignore_errors: true
       retries: 10
 
     - name: remove the VPC
@@ -613,5 +612,5 @@
         state: absent
       register: removed
       until: removed is not failed
-      ignore_errors: yes
+      ignore_errors: true
       retries: 10
