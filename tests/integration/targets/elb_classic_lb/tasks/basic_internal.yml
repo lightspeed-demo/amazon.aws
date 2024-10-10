@@ -4,10 +4,10 @@
     - module_defaults:
         elb_classic_lb:
           # zones: ['{{ availability_zone_a }}', '{{ availability_zone_b }}']
-          listeners: '{{ default_listeners }}'
+          listeners: "{{ default_listeners }}"
           wait: true
-          scheme: 'internal'
-          subnets: ['{{ subnet_a }}', '{{ subnet_b }}']
+          scheme: internal
+          subnets: ["{{ subnet_a }}", "{{ subnet_b }}"]
       block:
         # ============================================================
         # create test elb with listeners, certificate, and health check
@@ -68,7 +68,7 @@
 
         - ec2_eni_info:
             filters:
-              description: 'ELB {{ elb_name }}'
+              description: ELB {{ elb_name }}
           register: info
 
         - assert:
@@ -76,7 +76,7 @@
               - info.network_interfaces | length > 0
 
         - elb_classic_lb_info:
-            names: ['{{ elb_name }}']
+            names: ["{{ elb_name }}"]
           register: info
 
         - assert:
@@ -91,7 +91,7 @@
       elb_classic_lb:
         name: "{{ elb_name }}"
         state: present
-        subnets: ['{{ subnet_c }}']
+        subnets: ["{{ subnet_c }}"]
       register: result
       check_mode: true
 
@@ -104,7 +104,7 @@
       elb_classic_lb:
         name: "{{ elb_name }}"
         state: present
-        subnets: ['{{ subnet_c }}']
+        subnets: ["{{ subnet_c }}"]
       register: result
 
     - assert:
@@ -122,7 +122,7 @@
       elb_classic_lb:
         name: "{{ elb_name }}"
         state: present
-        subnets: ['{{ subnet_c }}']
+        subnets: ["{{ subnet_c }}"]
       register: result
       check_mode: true
 
@@ -135,7 +135,7 @@
       elb_classic_lb:
         name: "{{ elb_name }}"
         state: present
-        subnets: ['{{ subnet_c }}']
+        subnets: ["{{ subnet_c }}"]
       register: result
 
     - assert:
@@ -156,7 +156,7 @@
       elb_classic_lb:
         name: "{{ elb_name }}"
         state: present
-        subnets: ['{{ subnet_c }}', '{{ subnet_a2 }}']
+        subnets: ["{{ subnet_c }}", "{{ subnet_a2 }}"]
         purge_subnets: true
       register: result
       check_mode: true
@@ -170,7 +170,7 @@
       elb_classic_lb:
         name: "{{ elb_name }}"
         state: present
-        subnets: ['{{ subnet_c }}', '{{ subnet_a2 }}']
+        subnets: ["{{ subnet_c }}", "{{ subnet_a2 }}"]
         purge_subnets: true
       register: result
 
@@ -190,7 +190,7 @@
       elb_classic_lb:
         name: "{{ elb_name }}"
         state: present
-        subnets: ['{{ subnet_c }}', '{{ subnet_a2 }}']
+        subnets: ["{{ subnet_c }}", "{{ subnet_a2 }}"]
         purge_subnets: true
       register: result
       check_mode: true
@@ -204,7 +204,7 @@
       elb_classic_lb:
         name: "{{ elb_name }}"
         state: present
-        subnets: ['{{ subnet_c }}', '{{ subnet_a2 }}']
+        subnets: ["{{ subnet_c }}", "{{ subnet_a2 }}"]
         purge_subnets: true
       register: result
 
@@ -234,8 +234,8 @@
       assert:
         that:
           - result is changed
-          - 'result.elb.name == "{{ elb_name }}"'
-          - 'result.elb.status == "deleted"'
+          - result.elb.name == "{{ elb_name }}"
+          - result.elb.status == "deleted"
 
     - name: remove the test load balancer completely
       elb_classic_lb:
@@ -248,8 +248,8 @@
       assert:
         that:
           - result is changed
-          - 'result.elb.name == "{{ elb_name }}"'
-          - 'result.elb.status == "deleted"'
+          - result.elb.name == "{{ elb_name }}"
+          - result.elb.status == "deleted"
 
     - name: remove the test load balancer completely (idempotency) (check_mode)
       elb_classic_lb:
@@ -263,8 +263,8 @@
       assert:
         that:
           - result is not changed
-          - 'result.elb.name == "{{ elb_name }}"'
-          - 'result.elb.status == "gone"'
+          - result.elb.name == "{{ elb_name }}"
+          - result.elb.status == "gone"
 
     - name: remove the test load balancer completely (idempotency)
       elb_classic_lb:
@@ -277,11 +277,10 @@
       assert:
         that:
           - result is not changed
-          - 'result.elb.name == "{{ elb_name }}"'
-          - 'result.elb.status == "gone"'
+          - result.elb.name == "{{ elb_name }}"
+          - result.elb.status == "gone"
 
   always:
-
     # ============================================================
     - name: remove the test load balancer
       elb_classic_lb:
