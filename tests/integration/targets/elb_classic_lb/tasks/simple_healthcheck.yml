@@ -5,7 +5,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    health_check: '{{ nonhttp_health_check }}'
+    health_check: "{{ nonhttp_health_check }}"
   register: result
   check_mode: true
 
@@ -17,7 +17,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    health_check: '{{ nonhttp_health_check }}'
+    health_check: "{{ nonhttp_health_check }}"
   register: result
 
 - assert:
@@ -33,7 +33,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    health_check: '{{ nonhttp_health_check }}'
+    health_check: "{{ nonhttp_health_check }}"
   register: result
   check_mode: true
 
@@ -45,7 +45,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    health_check: '{{ nonhttp_health_check }}'
+    health_check: "{{ nonhttp_health_check }}"
   register: result
 
 - assert:
@@ -63,7 +63,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    health_check: '{{ updated_health_check }}'
+    health_check: "{{ updated_health_check }}"
   register: result
   check_mode: true
 
@@ -75,7 +75,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    health_check: '{{ updated_health_check }}'
+    health_check: "{{ updated_health_check }}"
   register: result
 
 - assert:
@@ -91,7 +91,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    health_check: '{{ updated_health_check }}'
+    health_check: "{{ updated_health_check }}"
   register: result
   check_mode: true
 
@@ -103,7 +103,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    health_check: '{{ updated_health_check }}'
+    health_check: "{{ updated_health_check }}"
   register: result
 
 - assert:
