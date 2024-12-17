@@ -1,3 +1,4 @@
+---
 - module_defaults:
     group/aws:
       access_key: "{{ aws_access_key }}"
@@ -16,8 +17,8 @@
         termination_protection: true
         instance_type: "{{ ec2_instance_type }}"
         state: running
-        wait: yes
-      check_mode: yes
+        wait: true
+      check_mode: true
       register: create_instance_check_mode_results
 
     - name: Check the returned value for the earlier task
@@ -37,11 +38,11 @@
         termination_protection: true
         instance_type: "{{ ec2_instance_type }}"
         state: running
-        wait: yes
+        wait: true
       register: create_instance_results
 
     - set_fact:
-        instance_id: '{{ create_instance_results.instances[0].instance_id }}'
+        instance_id: "{{ create_instance_results.instances[0].instance_id }}"
 
     - name: Check return values of the create instance task
       assert:
@@ -51,7 +52,7 @@
           - "'{{ create_instance_results.spec.DisableApiTermination }}'"
 
     - name: Get info on termination protection
-      command: 'aws ec2 describe-instance-attribute --attribute disableApiTermination --instance-id {{ instance_id }}'
+      command: aws ec2 describe-instance-attribute --attribute disableApiTermination --instance-id {{ instance_id }}
       environment:
         AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
         AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
@@ -79,8 +80,8 @@
         termination_protection: true
         instance_type: "{{ ec2_instance_type }}"
         state: running
-        wait: yes
-      check_mode: yes
+        wait: true
+      check_mode: true
       register: create_instance_check_mode_results
 
     - name: Check the returned value for the earlier task
@@ -99,7 +100,7 @@
         termination_protection: true
         instance_type: "{{ ec2_instance_type }}"
         state: running
-        wait: yes
+        wait: true
       register: create_instance_results
 
     - name: Check return values of the create instance task
@@ -125,7 +126,7 @@
         termination_protection: false
         instance_type: "{{ ec2_instance_type }}"
         vpc_subnet_id: "{{ testing_subnet_b.subnet.id }}"
-      check_mode: True
+      check_mode: true
       register: set_termination_protectioncheck_mode_results
 
     - name: Check return value
@@ -134,7 +135,7 @@
           - "{{ set_termination_protectioncheck_mode_results.changed }}"
 
     - name: Get info on termination protection
-      command: 'aws ec2 describe-instance-attribute --attribute disableApiTermination --instance-id {{ instance_id }}'
+      command: aws ec2 describe-instance-attribute --attribute disableApiTermination --instance-id {{ instance_id }}
       environment:
         AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
         AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
@@ -167,7 +168,7 @@
           - set_termination_protection_results.changed
 
     - name: Get info on termination protection
-      command: 'aws ec2 describe-instance-attribute --attribute disableApiTermination --instance-id {{ instance_id }}'
+      command: aws ec2 describe-instance-attribute --attribute disableApiTermination --instance-id {{ instance_id }}
       environment:
         AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
         AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"

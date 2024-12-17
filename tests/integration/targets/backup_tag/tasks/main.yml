@@ -6,7 +6,6 @@
       session_token: "{{ security_token | default(omit) }}"
       region: "{{ aws_region }}"
   block:
-
     - name: Create an AWS Backup Vault so we have something to tag
       amazon.aws.backup_vault:
         backup_vault_name: "{{ backup_vault_name }}"
@@ -30,11 +29,11 @@
         resource: "{{ vault_arn }}"
         state: present
         tags:
-            CamelCaseKey: CamelCaseValue
-            pascalCaseKey: pascalCaseValue
-            snake_case_key: snake_case_value
-            test_tag_key_1: tag_tag_value_1
-            test_tag_key_2: tag_tag_value_2
+          CamelCaseKey: CamelCaseValue
+          pascalCaseKey: pascalCaseValue
+          snake_case_key: snake_case_value
+          test_tag_key_1: tag_tag_value_1
+          test_tag_key_2: tag_tag_value_2
       register: add_tags_result
 
     - assert:
@@ -53,7 +52,7 @@
         resource: "{{ vault_arn }}"
         state: absent
         tags:
-            CamelCaseKey: CamelCaseValue
+          CamelCaseKey: CamelCaseValue
       register: remove_specified_result
 
     - assert:
@@ -71,8 +70,8 @@
         resource: "{{ vault_arn }}"
         state: absent
         tags:
-            test_tag_key_1: tag_tag_value_1
-            test_tag_key_2: tag_tag_value_2
+          test_tag_key_1: tag_tag_value_1
+          test_tag_key_2: tag_tag_value_2
         purge_tags: true
       register: remove_except_specified_result
 
@@ -89,7 +88,7 @@
         resource: "{{ vault_arn }}"
         state: present
         tags:
-            test_tag_key_1: test_tag_NEW_VALUE_1
+          test_tag_key_1: test_tag_NEW_VALUE_1
       register: update_specified_result
 
     - assert:
