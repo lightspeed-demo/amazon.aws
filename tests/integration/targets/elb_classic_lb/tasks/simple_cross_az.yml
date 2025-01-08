@@ -5,7 +5,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    cross_az_load_balancing: False
+    cross_az_load_balancing: false
   register: result
   check_mode: true
 
@@ -17,7 +17,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    cross_az_load_balancing: False
+    cross_az_load_balancing: false
   register: result
 
 - assert:
@@ -29,7 +29,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    cross_az_load_balancing: False
+    cross_az_load_balancing: false
   register: result
   check_mode: true
 
@@ -41,7 +41,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    cross_az_load_balancing: False
+    cross_az_load_balancing: false
   register: result
 
 - assert:
@@ -55,7 +55,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    cross_az_load_balancing: True
+    cross_az_load_balancing: true
   register: result
   check_mode: true
 
@@ -67,7 +67,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    cross_az_load_balancing: True
+    cross_az_load_balancing: true
   register: result
 
 - assert:
@@ -79,7 +79,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    cross_az_load_balancing: True
+    cross_az_load_balancing: true
   register: result
   check_mode: true
 
@@ -91,7 +91,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    cross_az_load_balancing: True
+    cross_az_load_balancing: true
   register: result
 
 - assert:
