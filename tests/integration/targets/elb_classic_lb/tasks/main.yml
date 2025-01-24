@@ -24,7 +24,6 @@
     - community.aws
     - community.crypto
   block:
-
     - include_tasks: missing_params.yml
 
     - include_tasks: describe_region.yml
@@ -42,7 +41,6 @@
     - include_tasks: complex_changes.yml
 
   always:
-
     # ============================================================
     # ELB should already be gone, but double-check
     - name: remove the test load balancer
