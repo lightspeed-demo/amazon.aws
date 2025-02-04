@@ -25,7 +25,7 @@
     - name: check that temp directory was made
       assert:
         that:
-        - remote_tmp_dir is defined
+          - remote_tmp_dir is defined
 
     - name: Create content
       set_fact:
@@ -60,7 +60,7 @@
     - name: stat the file
       stat:
         path: "{{ remote_tmp_dir }}/upload.txt"
-        get_checksum: yes
+        get_checksum: true
       register: upload_file
 
     - name: test putting an object in the bucket
@@ -70,8 +70,8 @@
         src: "{{ remote_tmp_dir }}/upload.txt"
         object: delete.txt
         tags:
-            "lowercase spaced": "hello cruel world"
-            "Title Case": "Hello Cruel World"
+          lowercase spaced: hello cruel world
+          Title Case: Hello Cruel World
       retries: 3
       delay: 3
       register: result
@@ -257,12 +257,12 @@
       retries: 3
       delay: 3
       register: result
-      until: "result.msg == 'GET operation complete'"
+      until: result.msg == 'GET operation complete'
 
     - name: stat the file so we can compare the checksums
       stat:
         path: "{{ remote_tmp_dir }}/download.txt"
-        get_checksum: yes
+        get_checksum: true
       register: download_file
 
     - assert:
@@ -278,12 +278,12 @@
       retries: 3
       delay: 3
       register: result
-      until: "result.msg == 'GET operation complete'"
+      until: result.msg == 'GET operation complete'
 
     - name: stat the file so we can compare the checksums
       stat:
         path: "{{ remote_tmp_dir }}/download-2.txt"
-        get_checksum: yes
+        get_checksum: true
       register: download_file
 
     - assert:
@@ -463,7 +463,7 @@
         bucket: "{{ bucket_name }}"
         mode: put
         src: "{{ remote_tmp_dir }}/upload.txt"
-        encrypt: yes
+        encrypt: true
         object: delete_encrypt.txt
       retries: 3
       delay: 3
@@ -483,12 +483,12 @@
       retries: 3
       delay: 3
       register: result
-      until: "result.msg == 'GET operation complete'"
+      until: result.msg == 'GET operation complete'
 
     - name: stat the file so we can compare the checksums
       stat:
         path: "{{ remote_tmp_dir }}/download_encrypted.txt"
-        get_checksum: yes
+        get_checksum: true
       register: download_file
 
     - assert:
@@ -508,7 +508,7 @@
         bucket: "{{ bucket_name }}"
         mode: put
         src: "{{ remote_tmp_dir }}/upload.txt"
-        encrypt: yes
+        encrypt: true
         encryption_mode: aws:kms
         object: delete_encrypt_kms.txt
       retries: 3
@@ -529,19 +529,19 @@
       retries: 3
       delay: 3
       register: result
-      until: "result.msg == 'GET operation complete'"
+      until: result.msg == 'GET operation complete'
 
     - name: get the stat of the file so we can compare the checksums
       stat:
         path: "{{ remote_tmp_dir }}/download_kms.txt"
-        get_checksum: yes
+        get_checksum: true
       register: download_file
 
     - assert:
         that:
           - upload_file.stat.checksum == download_file.stat.checksum
 
-      # FIXME - could use a test that checks uploaded file is *actually* aws:kms encrypted
+    # FIXME - could use a test that checks uploaded file is *actually* aws:kms encrypted
 
     - name: delete KMS encrypted file
       s3_object:
@@ -601,12 +601,12 @@
       block:
         - name: make tempfile 4 GB for OSX
           command:
-            _raw_params: "dd if=/dev/zero of={{ remote_tmp_dir }}/largefile bs=1m count=4096"
+            _raw_params: dd if=/dev/zero of={{ remote_tmp_dir }}/largefile bs=1m count=4096
           when: ansible_distribution == 'MacOSX'
 
         - name: make tempfile 4 GB for linux
           command:
-            _raw_params: "dd if=/dev/zero of={{ remote_tmp_dir }}/largefile bs=1M count=4096"
+            _raw_params: dd if=/dev/zero of={{ remote_tmp_dir }}/largefile bs=1M count=4096
           when: ansible_system == 'Linux'
 
         - name: upload the file to the bucket
@@ -625,7 +625,7 @@
             overwrite: different
           retries: 3
           delay: 3
-          until: "result.msg == 'GET operation complete'"
+          until: result.msg == 'GET operation complete'
           register: result
 
         - assert:
@@ -653,9 +653,9 @@
         src: "{{ remote_tmp_dir }}/upload.txt"
         object: file-with-permissions.txt
         permission: public-read
-        ignore_nonexistent_bucket: True
+        ignore_nonexistent_bucket: true
       register: upload_private
-      ignore_errors: True
+      ignore_errors: true
 
     - assert:
         that:
@@ -668,7 +668,7 @@
         src: "{{ remote_tmp_dir }}/upload.txt"
         object: file-with-permissions.txt
         permission: bucket-owner-full-control
-        ignore_nonexistent_bucket: True
+        ignore_nonexistent_bucket: true
       register: upload_owner
 
     - assert:
@@ -790,10 +790,10 @@
     - name: stat the files so we can compare the checksums
       stat:
         path: "{{ item }}"
-        get_checksum: yes
+        get_checksum: true
       loop:
-      - "{{ role_path }}/files/test.png"
-      - "{{ remote_tmp_dir }}/download_binary.bin"
+        - "{{ role_path }}/files/test.png"
+        - "{{ remote_tmp_dir }}/download_binary.bin"
       register: binary_files
 
     - assert:
@@ -805,244 +805,243 @@
     - include_tasks: copy_object_acl_disabled_bucket.yml
 
     # ============================================================
-    - name: 'Run tagging tests'
+    - name: Run tagging tests
       block:
-    # ============================================================
-      - name: create an object from static content
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags:
-            tag_one: '{{ resource_prefix }} One'
-            "Tag Two": 'two {{ resource_prefix }}'
-        register: result
+        # ============================================================
+        - name: create an object from static content
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags:
+              tag_one: "{{ resource_prefix }} One"
+              Tag Two: two {{ resource_prefix }}
+          register: result
 
-      - assert:
-          that:
-            - result is changed
-            - "'tags' in result"
-            - (result.tags | length) == 2
-            - result.tags["tag_one"] == '{{ resource_prefix }} One'
-            - result.tags["Tag Two"] == 'two {{ resource_prefix }}'
+        - assert:
+            that:
+              - result is changed
+              - "'tags' in result"
+              - (result.tags | length) == 2
+              - result.tags["tag_one"] == '{{ resource_prefix }} One'
+              - result.tags["Tag Two"] == 'two {{ resource_prefix }}'
 
-      - name: ensure idempotency on static content
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags:
-            tag_one: '{{ resource_prefix }} One'
-            "Tag Two": 'two {{ resource_prefix }}'
-        register: result
+        - name: ensure idempotency on static content
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags:
+              tag_one: "{{ resource_prefix }} One"
+              Tag Two: two {{ resource_prefix }}
+          register: result
 
-      - assert:
-          that:
-            - result is not changed
-            - "'tags' in result"
-            - (result.tags | length) == 2
-            - result.tags["tag_one"] == '{{ resource_prefix }} One'
-            - result.tags["Tag Two"] == 'two {{ resource_prefix }}'
+        - assert:
+            that:
+              - result is not changed
+              - "'tags' in result"
+              - (result.tags | length) == 2
+              - result.tags["tag_one"] == '{{ resource_prefix }} One'
+              - result.tags["Tag Two"] == 'two {{ resource_prefix }}'
 
-      - name: Remove a tag from an S3 object
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags:
-            tag_one: '{{ resource_prefix }} One'
-        register: result
+        - name: Remove a tag from an S3 object
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags:
+              tag_one: "{{ resource_prefix }} One"
+          register: result
 
-      - assert:
-          that:
-            - result is changed
-            - "'tags' in result"
-            - (result.tags | length) == 1
-            - result.tags["tag_one"] == "{{ resource_prefix }} One"
-            - "'Tag Two' not in result.tags"
+        - assert:
+            that:
+              - result is changed
+              - "'tags' in result"
+              - (result.tags | length) == 1
+              - result.tags["tag_one"] == "{{ resource_prefix }} One"
+              - "'Tag Two' not in result.tags"
 
-      - name: Remove the tag from an S3 object (idempotency)
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags:
-            tag_one: '{{ resource_prefix }} One'
-        register: result
+        - name: Remove the tag from an S3 object (idempotency)
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags:
+              tag_one: "{{ resource_prefix }} One"
+          register: result
 
-      - assert:
-          that:
-            - result is not changed
-            - "'tags' in result"
-            - (result.tags | length) == 1
-            - result.tags["tag_one"] == "{{ resource_prefix }} One"
-            - "'Tag Two' not in result.tags"
+        - assert:
+            that:
+              - result is not changed
+              - "'tags' in result"
+              - (result.tags | length) == 1
+              - result.tags["tag_one"] == "{{ resource_prefix }} One"
+              - "'Tag Two' not in result.tags"
 
-      - name: Add a tag for an S3 object with purge_tags False
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags:
-            tag_three: '{{ resource_prefix }} Three'
-          purge_tags: false
-        register: result
+        - name: Add a tag for an S3 object with purge_tags False
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags:
+              tag_three: "{{ resource_prefix }} Three"
+            purge_tags: false
+          register: result
 
-      - assert:
-          that:
-            - result is changed
-            - "'tags' in result"
-            - (result.tags | length) == 2
-            - result.tags["tag_three"] == '{{ resource_prefix }} Three'
-            - result.tags["tag_one"] == '{{ resource_prefix }} One'
+        - assert:
+            that:
+              - result is changed
+              - "'tags' in result"
+              - (result.tags | length) == 2
+              - result.tags["tag_three"] == '{{ resource_prefix }} Three'
+              - result.tags["tag_one"] == '{{ resource_prefix }} One'
 
-      - name: Add a tag for an S3 object with purge_tags False (idempotency)
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags:
-            tag_three: '{{ resource_prefix }} Three'
-          purge_tags: false
-        register: result
+        - name: Add a tag for an S3 object with purge_tags False (idempotency)
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags:
+              tag_three: "{{ resource_prefix }} Three"
+            purge_tags: false
+          register: result
 
-      - assert:
-          that:
-            - result is not changed
-            - "'tags' in result"
-            - (result.tags | length) == 2
-            - result.tags["tag_three"] == '{{ resource_prefix }} Three'
-            - result.tags["tag_one"] == '{{ resource_prefix }} One'
+        - assert:
+            that:
+              - result is not changed
+              - "'tags' in result"
+              - (result.tags | length) == 2
+              - result.tags["tag_three"] == '{{ resource_prefix }} Three'
+              - result.tags["tag_one"] == '{{ resource_prefix }} One'
 
-      - name: Update tags for an S3 object with purge_tags False
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags:
-            "TagFour": '{{ resource_prefix }} tag_four'
-          purge_tags: false
-        register: result
+        - name: Update tags for an S3 object with purge_tags False
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags:
+              TagFour: "{{ resource_prefix }} tag_four"
+            purge_tags: false
+          register: result
 
-      - assert:
-          that:
-            - result is changed
-            - "'tags' in result"
-            - (result.tags | length) == 3
-            - result.tags["tag_one"] == '{{ resource_prefix }} One'
-            - result.tags["tag_three"] == '{{ resource_prefix }} Three'
-            - result.tags["TagFour"] == '{{ resource_prefix }} tag_four'
+        - assert:
+            that:
+              - result is changed
+              - "'tags' in result"
+              - (result.tags | length) == 3
+              - result.tags["tag_one"] == '{{ resource_prefix }} One'
+              - result.tags["tag_three"] == '{{ resource_prefix }} Three'
+              - result.tags["TagFour"] == '{{ resource_prefix }} tag_four'
 
-      - name:  Update tags for an S3 object with purge_tags False (idempotency)
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags:
-            "TagFour": '{{ resource_prefix }} tag_four'
-          purge_tags: false
-        register: result
+        - name: Update tags for an S3 object with purge_tags False (idempotency)
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags:
+              TagFour: "{{ resource_prefix }} tag_four"
+            purge_tags: false
+          register: result
 
-      - assert:
-          that:
-            - result is not changed
-            - "'tags' in result"
-            - (result.tags | length) == 3
-            - result.tags["tag_one"] == '{{ resource_prefix }} One'
-            - result.tags["tag_three"] == '{{ resource_prefix }} Three'
-            - result.tags["TagFour"] == '{{ resource_prefix }} tag_four'
+        - assert:
+            that:
+              - result is not changed
+              - "'tags' in result"
+              - (result.tags | length) == 3
+              - result.tags["tag_one"] == '{{ resource_prefix }} One'
+              - result.tags["tag_three"] == '{{ resource_prefix }} Three'
+              - result.tags["TagFour"] == '{{ resource_prefix }} tag_four'
 
-      - name: Specify empty tags for an S3 object with purge_tags False
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags: {}
-          purge_tags: false
-        register: result
+        - name: Specify empty tags for an S3 object with purge_tags False
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags: {}
+            purge_tags: false
+          register: result
 
-      - assert:
-          that:
-            - result is not changed
-            - "'tags' in result"
-            - (result.tags | length) == 3
-            - result.tags["tag_one"] == '{{ resource_prefix }} One'
-            - result.tags["tag_three"] == '{{ resource_prefix }} Three'
-            - result.tags["TagFour"] == '{{ resource_prefix }} tag_four'
+        - assert:
+            that:
+              - result is not changed
+              - "'tags' in result"
+              - (result.tags | length) == 3
+              - result.tags["tag_one"] == '{{ resource_prefix }} One'
+              - result.tags["tag_three"] == '{{ resource_prefix }} Three'
+              - result.tags["TagFour"] == '{{ resource_prefix }} tag_four'
 
-      - name: Do not specify any tag to ensure previous tags are not removed
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-        register: result
+        - name: Do not specify any tag to ensure previous tags are not removed
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+          register: result
 
-      - assert:
-          that:
-            - result is not changed
-            - "'tags' in result"
-            - (result.tags | length) == 3
-            - result.tags["tag_one"] == '{{ resource_prefix }} One'
-            - result.tags["tag_three"] == '{{ resource_prefix }} Three'
-            - result.tags["TagFour"] == '{{ resource_prefix }} tag_four'
+        - assert:
+            that:
+              - result is not changed
+              - "'tags' in result"
+              - (result.tags | length) == 3
+              - result.tags["tag_one"] == '{{ resource_prefix }} One'
+              - result.tags["tag_three"] == '{{ resource_prefix }} Three'
+              - result.tags["TagFour"] == '{{ resource_prefix }} tag_four'
 
-      - name: Remove all tags
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          overwrite: different
-          content: >-
-            test content
-          tags: {}
-        register: result
+        - name: Remove all tags
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            overwrite: different
+            content: >-
+              test content
+            tags: {}
+          register: result
 
-      - assert:
-          that:
-            - result is changed
-            - "'tags' in result"
-            - (result.tags | length) == 0
+        - assert:
+            that:
+              - result is changed
+              - "'tags' in result"
+              - (result.tags | length) == 0
 
-      - name: Remove all tags (idempotency)
-        s3_object:
-          bucket: "{{ bucket_name }}"
-          object: put-content.txt
-          mode: put
-          content: >-
-            test content
-          tags: {}
-        register: result
+        - name: Remove all tags (idempotency)
+          s3_object:
+            bucket: "{{ bucket_name }}"
+            object: put-content.txt
+            mode: put
+            content: >-
+              test content
+            tags: {}
+          register: result
 
-      - assert:
-          that:
-            - result is not changed
-            - "'tags' in result"
-            - (result.tags | length) == 0
+        - assert:
+            that:
+              - result is not changed
+              - "'tags' in result"
+              - (result.tags | length) == 0
 
-      - include_tasks: copy_recursively.yml
+        - include_tasks: copy_recursively.yml
 
   always:
-
     - name: delete temporary files
       file:
         state: absent
