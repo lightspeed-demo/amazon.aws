@@ -1,5 +1,5 @@
 ---
-- name: "Run integration tests for IAM managed policy"
+- name: Run integration tests for IAM managed policy
   module_defaults:
     group/aws:
       access_key: "{{ aws_access_key }}"
@@ -16,12 +16,12 @@
         policy:
           Version: "2012-10-17"
           Statement:
-            - Effect: "Deny"
-              Action: "logs:CreateLogGroup"
+            - Effect: Deny
+              Action: logs:CreateLogGroup
               Resource: "*"
         state: present
       register: result
-      check_mode: yes
+      check_mode: true
 
     - name: Create IAM managed policy - check mode
       assert:
@@ -34,8 +34,8 @@
         policy:
           Version: "2012-10-17"
           Statement:
-            - Effect: "Deny"
-              Action: "logs:CreateLogGroup"
+            - Effect: Deny
+              Action: logs:CreateLogGroup
               Resource: "*"
         state: present
       register: result
@@ -52,8 +52,8 @@
         policy:
           Version: "2012-10-17"
           Statement:
-            - Effect: "Deny"
-              Action: "logs:CreateLogGroup"
+            - Effect: Deny
+              Action: logs:CreateLogGroup
               Resource: "*"
         state: present
       register: result
@@ -70,12 +70,12 @@
         policy:
           Version: "2012-10-17"
           Statement:
-            - Effect: "Deny"
-              Action: "logs:Describe*"
+            - Effect: Deny
+              Action: logs:Describe*
               Resource: "*"
         state: present
       register: result
-      check_mode: yes
+      check_mode: true
 
     - name: Update IAM managed policy - check mode
       assert:
@@ -88,8 +88,8 @@
         policy:
           Version: "2012-10-17"
           Statement:
-            - Effect: "Deny"
-              Action: "logs:Describe*"
+            - Effect: Deny
+              Action: logs:Describe*
               Resource: "*"
         state: present
       register: result
@@ -106,8 +106,8 @@
         policy:
           Version: "2012-10-17"
           Statement:
-            - Effect: "Deny"
-              Action: "logs:Describe*"
+            - Effect: Deny
+              Action: logs:Describe*
               Resource: "*"
         state: present
       register: result
@@ -123,7 +123,7 @@
         policy_name: "{{ policy_name }}"
         state: absent
       register: result
-      check_mode: yes
+      check_mode: true
 
     - name: Delete IAM managed policy - check mode
       assert:
@@ -157,4 +157,4 @@
       iam_managed_policy:
         policy_name: "{{ policy_name }}"
         state: absent
-      ignore_errors: yes
+      ignore_errors: true
