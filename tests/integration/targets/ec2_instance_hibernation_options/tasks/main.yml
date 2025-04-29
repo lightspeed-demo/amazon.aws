@@ -1,3 +1,4 @@
+---
 - module_defaults:
     group/aws:
       access_key: "{{ aws_access_key }}"
@@ -21,8 +22,8 @@
               delete_on_termination: true
               encrypted: true
         state: running
-        wait: yes
-      check_mode: yes
+        wait: true
+      check_mode: true
       register: create_instance_check_mode_results
 
     - name: Check the returned value for the earlier task
@@ -47,11 +48,11 @@
               delete_on_termination: true
               encrypted: true
         state: running
-        wait: yes
+        wait: true
       register: create_instance_results
 
     - set_fact:
-        instance_id: '{{ create_instance_results.instances[0].instance_id }}'
+        instance_id: "{{ create_instance_results.instances[0].instance_id }}"
 
     - name: Check return values of the create instance task
       assert:
@@ -63,7 +64,7 @@
     - name: Gather information about the instance to get the hibernation status
       ec2_instance_info:
         filters:
-          "tag:Name": "{{ resource_prefix }}-hibernation-options"
+          tag:Name: "{{ resource_prefix }}-hibernation-options"
       register: instance_hibernation_status
 
     - name: Assert hibernation options is true
@@ -87,8 +88,8 @@
               delete_on_termination: true
               encrypted: true
         state: running
-        wait: yes
-      check_mode: yes
+        wait: true
+      check_mode: true
       register: create_instance_check_mode_results
 
     - name: Check the returned value for the earlier task
@@ -112,7 +113,7 @@
               delete_on_termination: true
               encrypted: true
         state: running
-        wait: yes
+        wait: true
       register: create_instance_results
 
     - name: Check return values of the create instance task
