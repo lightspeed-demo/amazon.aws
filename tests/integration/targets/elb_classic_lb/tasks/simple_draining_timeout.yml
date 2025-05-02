@@ -53,7 +53,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    connection_draining_timeout: '{{ default_drain_timeout }}'
+    connection_draining_timeout: "{{ default_drain_timeout }}"
   register: result
   check_mode: true
 
@@ -65,7 +65,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    connection_draining_timeout: '{{ default_drain_timeout }}'
+    connection_draining_timeout: "{{ default_drain_timeout }}"
   register: result
 
 - assert:
@@ -77,7 +77,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    connection_draining_timeout: '{{ default_drain_timeout }}'
+    connection_draining_timeout: "{{ default_drain_timeout }}"
   register: result
   check_mode: true
 
@@ -89,7 +89,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    connection_draining_timeout: '{{ default_drain_timeout }}'
+    connection_draining_timeout: "{{ default_drain_timeout }}"
   register: result
 
 - assert:
@@ -103,7 +103,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    connection_draining_timeout: '{{ updated_drain_timeout }}'
+    connection_draining_timeout: "{{ updated_drain_timeout }}"
   register: result
   check_mode: true
 
@@ -115,7 +115,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    connection_draining_timeout: '{{ updated_drain_timeout }}'
+    connection_draining_timeout: "{{ updated_drain_timeout }}"
   register: result
 
 - assert:
@@ -127,7 +127,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    connection_draining_timeout: '{{ updated_drain_timeout }}'
+    connection_draining_timeout: "{{ updated_drain_timeout }}"
   register: result
   check_mode: true
 
@@ -139,7 +139,7 @@
   elb_classic_lb:
     name: "{{ elb_name }}"
     state: present
-    connection_draining_timeout: '{{ updated_drain_timeout }}'
+    connection_draining_timeout: "{{ updated_drain_timeout }}"
   register: result
 
 - assert:
