@@ -93,7 +93,6 @@
     that:
       - result is not changed
 
-
 # ==============================================================
 
 - name: Disable Stickiness (check_mode)
@@ -287,7 +286,6 @@
 - assert:
     that:
       - result is not changed
-
 
 # ==============================================================
 
