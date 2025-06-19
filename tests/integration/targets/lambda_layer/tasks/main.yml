@@ -1,10 +1,10 @@
 ---
 - module_defaults:
     group/aws:
-      access_key: '{{ aws_access_key }}'
-      secret_key: '{{ aws_secret_key }}'
-      session_token: '{{ security_token | default(omit) }}'
-      region: '{{ aws_region }}'
+      access_key: "{{ aws_access_key }}"
+      secret_key: "{{ aws_secret_key }}"
+      session_token: "{{ security_token | default(omit) }}"
+      region: "{{ aws_region }}"
 
   collections:
     - amazon.aws
@@ -51,7 +51,7 @@
     - name: Create lambda layer (check_mode=true)
       lambda_layer:
         name: "{{ layer_name }}"
-        description: '{{ resource_prefix }} lambda layer first version'
+        description: "{{ resource_prefix }} lambda layer first version"
         content:
           zip_file: "{{ zip_file_path }}"
         compatible_runtimes:
@@ -75,7 +75,7 @@
     - name: Create lambda layer (first version)
       lambda_layer:
         name: "{{ layer_name }}"
-        description: '{{ resource_prefix }} lambda layer first version'
+        description: "{{ resource_prefix }} lambda layer first version"
         content:
           zip_file: "{{ zip_file_path }}"
         compatible_runtimes:
@@ -86,7 +86,7 @@
     - name: Create another lambda layer version
       lambda_layer:
         name: "{{ layer_name }}"
-        description: '{{ resource_prefix }} lambda layer second version'
+        description: "{{ resource_prefix }} lambda layer second version"
         content:
           s3_bucket: "{{ s3_bucket_name }}"
           s3_key: "{{ s3_bucket_object }}"
@@ -98,7 +98,7 @@
     - name: Retrieve all layers with latest version
       lambda_layer_info:
       register: layers
-    
+
     - name: Ensure layer created above was found
       assert:
         that:
@@ -191,12 +191,12 @@
     - name: Create multiple lambda layer versions
       lambda_layer:
         name: "{{ layer_name }}"
-        description: '{{ resource_prefix }} lambda layer version compatible with python3.{{ item }}'
+        description: "{{ resource_prefix }} lambda layer version compatible with python3.{{ item }}"
         content:
           s3_bucket: "{{ s3_bucket_name }}"
           s3_key: "{{ s3_bucket_object }}"
         compatible_runtimes:
-          - "python3.{{ item }}"
+          - python3.{{ item }}
         license_info: GPL-3.0-only
       with_items: ["9", "10"]
 
