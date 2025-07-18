@@ -4,10 +4,10 @@
 
 - module_defaults:
     group/aws:
-      region: '{{ aws_region }}'
-      access_key: '{{ aws_access_key }}'
-      secret_key: '{{ aws_secret_key }}'
-      session_token: '{{ security_token | default(omit) }}'
+      region: "{{ aws_region }}"
+      access_key: "{{ aws_access_key }}"
+      secret_key: "{{ aws_secret_key }}"
+      session_token: "{{ security_token | default(omit) }}"
   block:
     - name: Create temporary directory
       tempfile:
@@ -28,13 +28,13 @@
     - name: assert failure when called with no parameters
       assert:
         that:
-           - 'result.failed'
-           - 'result.msg == "missing required arguments: name"'
+          - result.failed
+          - 'result.msg == "missing required arguments: name"'
 
     # ============================================================
     - name: test removing a non-existent key pair (check mode)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: absent
       register: result
       check_mode: true
@@ -42,53 +42,53 @@
     - name: assert removing a non-existent key pair
       assert:
         that:
-          - 'not result.changed'
+          - not result.changed
 
     - name: test removing a non-existent key pair
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: absent
       register: result
 
     - name: assert removing a non-existent key pair
       assert:
         that:
-          - 'not result.changed'
+          - not result.changed
 
     # ============================================================
     # Test: create new key by AWS (key_material not provided)
     # ============================================================
     - name: test creating a new key pair (check_mode)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          snake_case: 'a_snake_case_value'
-          CamelCase: 'CamelCaseValue'
-          "spaced key": 'Spaced value'
+          snake_case: a_snake_case_value
+          CamelCase: CamelCaseValue
+          spaced key: Spaced value
       register: result
       check_mode: true
 
     - name: assert creating a new key pair
       assert:
         that:
-           - result is changed
+          - result is changed
 
     - name: assert that key pair was not created
       ec2_key_info:
         names:
-          - '{{ ec2_key_name }}'
+          - "{{ ec2_key_name }}"
       register: aws_keypair
       failed_when: aws_keypair.keypairs | length > 0
 
     - name: test creating a new key pair
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          snake_case: 'a_snake_case_value'
-          CamelCase: 'CamelCaseValue'
-          "spaced key": 'Spaced value'
+          snake_case: a_snake_case_value
+          CamelCase: CamelCaseValue
+          spaced key: Spaced value
       register: result
 
     - name: assert creating a new key pair
@@ -113,13 +113,13 @@
     - name: assert that key pair was created
       ec2_key_info:
         names:
-          - '{{ ec2_key_name }}'
+          - "{{ ec2_key_name }}"
       register: aws_keypair
       failed_when: aws_keypair.keypairs | length == 0
 
     - name: Gather info about the key pair
       ec2_key_info:
-        names: '{{ ec2_key_name }}'
+        names: "{{ ec2_key_name }}"
       register: key_info
 
     - name: assert the gathered key info
@@ -135,38 +135,38 @@
           - key_info.keypairs[0].tags['spaced key'] == 'Spaced value'
 
     - set_fact:
-        key_id_1: '{{ result.key.id }}'
+        key_id_1: "{{ result.key.id }}"
 
-    - name: 'test re-"creating" the same key (check_mode)'
+    - name: test re-"creating" the same key (check_mode)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          snake_case: 'a_snake_case_value'
-          CamelCase: 'CamelCaseValue'
-          "spaced key": 'Spaced value'
+          snake_case: a_snake_case_value
+          CamelCase: CamelCaseValue
+          spaced key: Spaced value
       register: result
       check_mode: true
 
     - name: assert re-creating the same key
       assert:
         that:
-           - result is not changed
+          - result is not changed
 
-    - name: 'test re-"creating" the same key'
+    - name: test re-"creating" the same key
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          snake_case: 'a_snake_case_value'
-          CamelCase: 'CamelCaseValue'
-          "spaced key": 'Spaced value'
+          snake_case: a_snake_case_value
+          CamelCase: CamelCaseValue
+          spaced key: Spaced value
       register: result
 
     - name: assert re-creating the same key
       assert:
         that:
-           - result is not changed
+          - result is not changed
 
     # ============================================================
     # Test: create new key by AWS (key_material not provided)
@@ -179,13 +179,13 @@
 
     - name: test creating a new key pair (check_mode)
       ec2_key:
-        name: '{{ ec2_key_name_rsa }}'
+        name: "{{ ec2_key_name_rsa }}"
         state: present
         file_name: "{{ priv_key_file_name }}"
         tags:
-          snake_case: 'a_snake_case_value'
-          CamelCase: 'CamelCaseValue'
-          "spaced key": 'Spaced value'
+          snake_case: a_snake_case_value
+          CamelCase: CamelCaseValue
+          spaced key: Spaced value
       register: result
       check_mode: true
       no_log: true
@@ -193,12 +193,12 @@
     - name: assert creating a new key pair
       assert:
         that:
-           - result is changed
+          - result is changed
 
     - name: assert that key pair was not created
       ec2_key_info:
         names:
-          - '{{ ec2_key_name_rsa }}'
+          - "{{ ec2_key_name_rsa }}"
       register: aws_keypair
       failed_when: aws_keypair.keypairs | length > 0
 
@@ -210,13 +210,13 @@
 
     - name: test creating a new key pair
       ec2_key:
-        name: '{{ ec2_key_name_rsa }}'
+        name: "{{ ec2_key_name_rsa }}"
         state: present
         file_name: "{{ priv_key_file_name }}"
         tags:
-          snake_case: 'a_snake_case_value'
-          CamelCase: 'CamelCaseValue'
-          "spaced key": 'Spaced value'
+          snake_case: a_snake_case_value
+          CamelCase: CamelCaseValue
+          spaced key: Spaced value
       register: result
 
     - name: assert creating a new key pair
@@ -238,11 +238,10 @@
           - '"spaced key" in result.key.tags'
           - result.key.tags['spaced key'] == 'Spaced value'
 
-
     - name: assert that key pair was created
       ec2_key_info:
         names:
-          - '{{ ec2_key_name_rsa }}'
+          - "{{ ec2_key_name_rsa }}"
       register: aws_keypair
       failed_when: aws_keypair.keypairs | length == 0
 
@@ -252,46 +251,46 @@
       register: result
       failed_when: (not result.stat.exists) or (result.stat.size == 0)
 
-    - name: 'test re-"creating" the same key (check_mode)'
+    - name: test re-"creating" the same key (check_mode)
       ec2_key:
-        name: '{{ ec2_key_name_rsa }}'
+        name: "{{ ec2_key_name_rsa }}"
         state: present
         file_name: "{{ priv_key_file_name }}"
         tags:
-          snake_case: 'a_snake_case_value'
-          CamelCase: 'CamelCaseValue'
-          "spaced key": 'Spaced value'
+          snake_case: a_snake_case_value
+          CamelCase: CamelCaseValue
+          spaced key: Spaced value
       register: result
       check_mode: true
 
     - name: assert re-creating the same key
       assert:
         that:
-           - result is not changed
+          - result is not changed
 
-    - name: 'test re-"creating" the same key'
+    - name: test re-"creating" the same key
       ec2_key:
-        name: '{{ ec2_key_name_rsa }}'
+        name: "{{ ec2_key_name_rsa }}"
         state: present
         file_name: "{{ priv_key_file_name }}"
         tags:
-          snake_case: 'a_snake_case_value'
-          CamelCase: 'CamelCaseValue'
-          "spaced key": 'Spaced value'
+          snake_case: a_snake_case_value
+          CamelCase: CamelCaseValue
+          spaced key: Spaced value
       register: result
 
     - name: assert re-creating the same key
       assert:
         that:
-           - result is not changed
+          - result is not changed
 
     # ============================================================
     - name: test updating tags without purge (check mode)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          newKey: 'Another value'
+          newKey: Another value
         purge_tags: false
       register: result
       check_mode: true
@@ -299,14 +298,14 @@
     - name: assert updated tags
       assert:
         that:
-           - result is changed
+          - result is changed
 
     - name: test updating tags without purge
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          newKey: 'Another value'
+          newKey: Another value
         purge_tags: false
       register: result
 
@@ -333,7 +332,7 @@
 
     - name: Gather info about the updated tags
       ec2_key_info:
-        names: '{{ ec2_key_name }}'
+        names: "{{ ec2_key_name }}"
       register: key_info
 
     - name: assert the gathered key info
@@ -352,10 +351,10 @@
 
     - name: test updating tags without purge - idempotency (check mode)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          newKey: 'Another value'
+          newKey: Another value
         purge_tags: false
       register: result
       check_mode: true
@@ -363,14 +362,14 @@
     - name: assert updated tags
       assert:
         that:
-           - result is not changed
+          - result is not changed
 
     - name: test updating tags without purge - idempotency
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          newKey: 'Another value'
+          newKey: Another value
         purge_tags: false
       register: result
 
@@ -398,10 +397,10 @@
     # ============================================================
     - name: test updating tags with purge (check mode)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          newKey: 'Another value'
+          newKey: Another value
         purge_tags: true
       register: result
       check_mode: true
@@ -409,14 +408,14 @@
     - name: assert updated tags
       assert:
         that:
-           - result is changed
+          - result is changed
 
     - name: test updating tags with purge
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          newKey: 'Another value'
+          newKey: Another value
         purge_tags: true
       register: result
 
@@ -440,10 +439,10 @@
 
     - name: test updating tags with purge - idempotency (check mode)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          newKey: 'Another value'
+          newKey: Another value
         purge_tags: true
       register: result
       check_mode: true
@@ -451,14 +450,14 @@
     - name: assert updated tags
       assert:
         that:
-           - result is not changed
+          - result is not changed
 
     - name: test updating tags with purge - idempotency
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: present
         tags:
-          newKey: 'Another value'
+          newKey: Another value
         purge_tags: true
       register: result
 
@@ -483,7 +482,7 @@
     # ============================================================
     - name: test removing an existent key (check mode)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: absent
       register: result
       check_mode: true
@@ -491,55 +490,55 @@
     - name: assert removing an existent key
       assert:
         that:
-           - result is changed
+          - result is changed
 
     - name: assert using check_mode did not removed key pair
       ec2_key_info:
         names:
-          - '{{ ec2_key_name }}'
+          - "{{ ec2_key_name }}"
       register: keys
       failed_when: keys.keypairs | length == 0
 
     - name: test removing an existent key
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: absent
       register: result
 
     - name: assert removing an existent key
       assert:
         that:
-           - result is changed
-           - '"key" in result'
-           - result.key == None
+          - result is changed
+          - '"key" in result'
+          - result.key == None
 
     - name: assert that key pair was removed
       ec2_key_info:
         names:
-          - '{{ ec2_key_name }}'
+          - "{{ ec2_key_name }}"
       register: keys
       failed_when: keys.keypairs | length > 0
 
     # ============================================================
     - name: test state=present with key_material
       ec2_key:
-        name: '{{ ec2_key_name }}'
-        key_material: '{{ key_material }}'
+        name: "{{ ec2_key_name }}"
+        key_material: "{{ key_material }}"
         state: present
       register: result
 
     - name: assert state=present with key_material
       assert:
         that:
-          - 'result.changed == True'
+          - result.changed == True
           - '"key" in result'
           - '"name" in result.key'
           - '"fingerprint" in result.key'
           - '"private_key" not in result.key'
           - '"id" in result.key'
           - '"tags" in result.key'
-          - 'result.key.name == "{{ec2_key_name}}"'
-          - 'result.key.fingerprint == "{{fingerprint}}"'
+          - result.key.name == "{{ec2_key_name}}"
+          - result.key.fingerprint == "{{fingerprint}}"
 
     - name: Gather key info with fingerprint
       ec2_key_info:
@@ -554,13 +553,13 @@
           - '"private_key" not in key_info.keypairs[0]'
           - '"key_pair_id" in key_info.keypairs[0]'
           - '"tags" in key_info.keypairs[0]'
-          - 'key_info.keypairs[0].key_name == "{{ec2_key_name}}"'
-          - 'key_info.keypairs[0].key_fingerprint == "{{fingerprint}}"'
+          - key_info.keypairs[0].key_name == "{{ec2_key_name}}"
+          - key_info.keypairs[0].key_fingerprint == "{{fingerprint}}"
     # ============================================================
     - name: test state=present with key_material (idempotency)
       ec2_key:
-        name: '{{ ec2_key_name }}'
-        key_material: '{{ key_material }}'
+        name: "{{ ec2_key_name }}"
+        key_material: "{{ key_material }}"
         state: present
       register: result
 
@@ -574,91 +573,90 @@
           - '"private_key" not in result.key'
           - '"id" in result.key'
           - '"tags" in result.key'
-          - 'result.key.name == "{{ec2_key_name}}"'
-          - 'result.key.fingerprint == "{{fingerprint}}"'
-          - 'result.msg == "key pair already exists"'
+          - result.key.name == "{{ec2_key_name}}"
+          - result.key.fingerprint == "{{fingerprint}}"
+          - result.msg == "key pair already exists"
 
     # ============================================================
 
     - name: test force=no with another_key_material (expect changed=false)
       ec2_key:
-        name: '{{ ec2_key_name }}'
-        key_material: '{{ another_key_material }}'
-        force: no
+        name: "{{ ec2_key_name }}"
+        key_material: "{{ another_key_material }}"
+        force: false
       register: result
 
     - name: assert force=no with another_key_material (expect changed=false)
       assert:
         that:
-          - 'not result.changed'
-          - 'result.key.fingerprint == "{{ fingerprint }}"'
+          - not result.changed
+          - result.key.fingerprint == "{{ fingerprint }}"
 
     # ============================================================
 
     - name: test updating a key pair using another_key_material (expect changed=True)
       ec2_key:
-        name: '{{ ec2_key_name }}'
-        key_material: '{{ another_key_material }}'
+        name: "{{ ec2_key_name }}"
+        key_material: "{{ another_key_material }}"
       register: result
 
     - name: assert updating a key pair using another_key_material (expect changed=True)
       assert:
         that:
-          - 'result.changed'
-          - 'result.key.fingerprint != "{{ fingerprint }}"'
+          - result.changed
+          - result.key.fingerprint != "{{ fingerprint }}"
 
     # ============================================================
     - name: test state=absent (expect changed=true)
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         state: absent
       register: result
 
     - name: assert state=absent with key_material (expect changed=true)
       assert:
         that:
-           - 'result.changed'
-           - '"key" in result'
-           - 'result.key == None'
+          - result.changed
+          - '"key" in result'
+          - result.key == None
 
     # ============================================================
     - name: test create ED25519 key pair type
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         key_type: ed25519
       register: result
 
     - name: assert that task succeed
       assert:
         that:
-          - 'result.changed'
-          - 'result.key.type == "ed25519"'
+          - result.changed
+          - result.key.type == "ed25519"
 
     - name: Update key pair type from ED25519 to RSA
       ec2_key:
-        name: '{{ ec2_key_name }}'
+        name: "{{ ec2_key_name }}"
         key_type: rsa
       register: result
 
     - name: assert that task succeed
       assert:
         that:
-          - 'result.changed'
-          - 'result.key.type == "rsa"'
+          - result.changed
+          - result.key.type == "rsa"
 
   always:
-
     # ============================================================
     - name: Always delete the key we might create
       ec2_key:
-        name: '{{ item }}'
+        name: "{{ item }}"
         state: absent
       with_items:
-        - '{{ ec2_key_name }}'
-        - '{{ ec2_key_name_rsa }}'
+        - "{{ ec2_key_name }}"
+        - "{{ ec2_key_name_rsa }}"
 
     - name: Delete the temporary directory
       file:
-        path: '{{ _tmpdir.path }}'
+        path: "{{ _tmpdir.path }}"
         state: absent
       ignore_errors: true
