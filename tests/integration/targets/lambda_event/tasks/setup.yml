@@ -36,13 +36,13 @@
 
 - name: create minimal lambda role
   iam_role:
-    name: '{{ lambda_role_name }}'
+    name: "{{ lambda_role_name }}"
     assume_role_policy_document: '{{ lookup("file", "minimal_trust_policy.json")}}'
     create_instance_profile: false
     managed_policies:
-    - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
-    - arn:aws:iam::aws:policy/AWSLambdaInvocation-DynamoDB
-    - arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole
+      - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+      - arn:aws:iam::aws:policy/AWSLambdaInvocation-DynamoDB
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole
   register: iam_role
 - name: wait 10 seconds for role to become available
   pause:
@@ -52,29 +52,29 @@
 - name: move lambda into place for archive module
   copy:
     src: mini_lambda.py
-    dest: '{{ output_dir }}/mini_lambda.py'
+    dest: "{{ output_dir }}/mini_lambda.py"
     mode: preserve
 - name: bundle lambda into a zip
   register: zip_res
   archive:
     format: zip
-    path: '{{ output_dir }}/mini_lambda.py'
-    dest: '{{ output_dir }}/mini_lambda.zip'
+    path: "{{ output_dir }}/mini_lambda.py"
+    dest: "{{ output_dir }}/mini_lambda.zip"
 
 - name: test state=present - upload the lambda
   lambda:
-    name: '{{ lambda_function_name }}'
-    runtime: '{{ lambda_python_runtime }}'
-    handler: '{{ lambda_python_handler }}'
-    role: '{{ lambda_role_name }}'
-    zip_file: '{{ zip_res.dest }}'
+    name: "{{ lambda_function_name }}"
+    runtime: "{{ lambda_python_runtime }}"
+    handler: "{{ lambda_python_handler }}"
+    role: "{{ lambda_role_name }}"
+    zip_file: "{{ zip_res.dest }}"
     architecture: x86_64
   register: result
 
 - name: assert lambda upload succeeded
   assert:
     that:
-    - result.changed
+      - result.changed
 
 - name: Get lambda function ARN
   ansible.builtin.set_fact:
