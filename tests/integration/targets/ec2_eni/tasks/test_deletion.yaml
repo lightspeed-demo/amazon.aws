@@ -6,7 +6,7 @@
     name: "{{ resource_prefix }}"
     subnet_id: "{{ vpc_subnet_id }}"
     state: absent
-  check_mode: True
+  check_mode: true
   register: result_check_mode
 
 - assert:
@@ -37,7 +37,7 @@
     name: "{{ resource_prefix }}"
     subnet_id: "{{ vpc_subnet_id }}"
     state: absent
-  check_mode: True
+  check_mode: true
   register: result_check_mode
 
 - assert:
