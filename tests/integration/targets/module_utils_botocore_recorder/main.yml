@@ -9,4 +9,4 @@
       register: result
     - assert:
         that:
-         - lookup('ansible.builtin.env', '_ANSIBLE_PLACEBO_RECORD') or (lookup('ansible.builtin.env', '_ANSIBLE_PLACEBO_REPLAY') and result.user_id == "AWZBREIZHEOMABRONIFVGFS6GH")
+          - lookup('ansible.builtin.env', '_ANSIBLE_PLACEBO_RECORD') or (lookup('ansible.builtin.env', '_ANSIBLE_PLACEBO_REPLAY') and result.user_id == "AWZBREIZHEOMABRONIFVGFS6GH")
