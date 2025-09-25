@@ -1,3 +1,4 @@
+---
 - name: test copying objects to bucket with ACL disabled
   block:
     - name: Create a bucket with ACL disabled for the test
@@ -16,7 +17,7 @@
 
     - name: Create content
       set_fact:
-          content: "{{ lookup('password', '/dev/null chars=ascii_letters,digits,hexdigits,punctuation') }}"
+        content: "{{ lookup('password', '/dev/null chars=ascii_letters,digits,hexdigits,punctuation') }}"
 
     - name: Create local acl_disabled_upload_test.txt
       copy:
@@ -27,7 +28,7 @@
       amazon.aws.s3_object:
         bucket: "{{ bucket_name }}-acl-disabled"
         src: "{{ remote_tmp_dir }}/acl_disabled_upload_test.txt"
-        object: "acl_disabled_upload_test.txt"
+        object: acl_disabled_upload_test.txt
         mode: put
       check_mode: true
       register: upload_file_result
@@ -45,7 +46,7 @@
       amazon.aws.s3_object:
         bucket: "{{ bucket_name }}-acl-disabled"
         src: "{{ remote_tmp_dir }}/acl_disabled_upload_test.txt"
-        object: "acl_disabled_upload_test.txt"
+        object: acl_disabled_upload_test.txt
         mode: put
       register: upload_file_result
 
@@ -62,7 +63,7 @@
       amazon.aws.s3_object:
         bucket: "{{ bucket_name }}-acl-disabled"
         src: "{{ remote_tmp_dir }}/acl_disabled_upload_test.txt"
-        object: "acl_disabled_upload_test.txt"
+        object: acl_disabled_upload_test.txt
         mode: put
       check_mode: true
       register: upload_file_result
@@ -80,7 +81,7 @@
       amazon.aws.s3_object:
         bucket: "{{ bucket_name }}-acl-disabled"
         src: "{{ remote_tmp_dir }}/acl_disabled_upload_test.txt"
-        object: "acl_disabled_upload_test.txt"
+        object: acl_disabled_upload_test.txt
         mode: put
       register: upload_file_result
 
@@ -96,7 +97,7 @@
     - name: Create an object in the bucket with permissions (permission not set)
       amazon.aws.s3_object:
         bucket: "{{ bucket_name }}-acl-disabled"
-        object: "/test_directory"
+        object: /test_directory
         permission: bucket-owner-full-control
         mode: create
       register: permission_result
@@ -109,7 +110,6 @@
           - '"Virtual directory test_directory/ created" in permission_result.msg'
 
   always:
-
     - name: Delete the file in the bucket
       amazon.aws.s3_object:
         bucket: "{{ bucket_name }}-acl-disabled"
@@ -119,8 +119,8 @@
       delay: 3
       ignore_errors: true
       loop:
-        - "acl_disabled_upload_test.txt"
-        - "/test_directory/"
+        - acl_disabled_upload_test.txt
+        - /test_directory/
 
     - name: List keys simple
       amazon.aws.s3_object:
