@@ -9,9 +9,9 @@
     - set_fact:
         local_bucket_name: "{{ bucket_name | hash('md5')}}acl"
 
-    - name: 'Create a simple bucket'
+    - name: Create a simple bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         object_ownership: BucketOwnerPreferred
         public_access:
           block_public_acls: true
@@ -19,9 +19,9 @@
           ignore_public_acls: true
           restrict_public_buckets: true
 
-    - name: 'Update bucket ACL, new value = private'
+    - name: Update bucket ACL, new value = private
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         acl: private
         state: present
       register: private_acl
@@ -30,9 +30,9 @@
         that:
           - private_acl.changed
 
-    - name: 'Update bucket ACL, new value = public-read'
+    - name: Update bucket ACL, new value = public-read
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         acl: public-read
         state: present
       ignore_errors: true
@@ -42,9 +42,9 @@
         that:
           - public_read_acl is failed
 
-    - name: 'Update bucket ACL, new value = public-read'
+    - name: Update bucket ACL, new value = public-read
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         acl: public-read
         state: present
         public_access:
@@ -63,6 +63,6 @@
   always:
     - name: Ensure all buckets are deleted
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
-      ignore_errors: yes
+      ignore_errors: true
