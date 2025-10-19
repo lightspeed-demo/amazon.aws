@@ -2,13 +2,13 @@
 - block:
     - set_fact:
         local_bucket_name: "{{ bucket_name | hash('md5')}}complex"
-    - name: 'Create more complex s3_bucket'
+    - name: Create more complex s3_bucket
       s3_bucket:
         name: "{{ local_bucket_name }}"
         state: present
         policy: "{{ lookup('template','policy.json') }}"
-        requester_pays: yes
-        versioning: yes
+        requester_pays: true
+        versioning: true
         public_access:
           block_public_acls: false
         tags:
@@ -33,18 +33,18 @@
 
     # ============================================================
 
-    - name: 'Pause to help with s3 bucket eventual consistency'
+    - name: Pause to help with s3 bucket eventual consistency
       wait_for:
         timeout: 10
       delegate_to: localhost
 
-    - name: 'Try to update the same complex s3_bucket'
+    - name: Try to update the same complex s3_bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         policy: "{{ lookup('template','policy.json') }}"
-        requester_pays: yes
-        versioning: yes
+        requester_pays: true
+        versioning: true
         tags:
           example: tag1
           another: tag2
@@ -66,13 +66,13 @@
           - output.policy.Statement[0].Sid == 'AddPerm'
 
     # ============================================================
-    - name: 'Update bucket policy on complex bucket'
+    - name: Update bucket policy on complex bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         policy: "{{ lookup('template','policy-updated.json') }}"
-        requester_pays: yes
-        versioning: yes
+        requester_pays: true
+        versioning: true
         tags:
           example: tag1
           another: tag2
@@ -89,18 +89,18 @@
 
     # ============================================================
 
-    - name: 'Pause to help with s3 bucket eventual consistency'
+    - name: Pause to help with s3 bucket eventual consistency
       wait_for:
         timeout: 10
       delegate_to: localhost
 
     - name: Update attributes for s3_bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
         policy: "{{ lookup('template','policy.json') }}"
-        requester_pays: no
-        versioning: no
+        requester_pays: false
+        versioning: false
         tags:
           example: tag1-udpated
           another: tag2
@@ -121,9 +121,9 @@
           - output.policy.Statement[0].Resource == 'arn:aws:s3:::{{ local_bucket_name }}/*'
           - output.policy.Statement[0].Sid == 'AddPerm'
 
-    - name: 'Delete complex test bucket'
+    - name: Delete complex test bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
       register: output
 
@@ -131,9 +131,9 @@
         that:
           - output is changed
 
-    - name: 'Re-delete complex test bucket'
+    - name: Re-delete complex test bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
       register: output
 
@@ -143,8 +143,8 @@
 
   # ============================================================
   always:
-    - name: 'Ensure all buckets are deleted'
+    - name: Ensure all buckets are deleted
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
-      ignore_errors: yes
+      ignore_errors: true
