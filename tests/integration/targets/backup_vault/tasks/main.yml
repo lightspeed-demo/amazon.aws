@@ -8,10 +8,10 @@
   block:
     - name: create a key
       kms_key:
-        alias: '{{ kms_key_alias }}'
+        alias: "{{ kms_key_alias }}"
         state: present
-        enabled: yes
-        enable_key_rotation: no
+        enabled: true
+        enable_key_rotation: false
       register: key
 
     - name: Create an AWS Backup Vault - check mode
@@ -21,7 +21,7 @@
         tags:
           environment: dev
       register: backup_vault_result_check
-      check_mode: yes
+      check_mode: true
 
     - assert:
         that:
@@ -254,6 +254,6 @@
     - name: finish off by deleting keys
       kms_key:
         state: absent
-        alias: '{{ kms_key_alias }}'
+        alias: "{{ kms_key_alias }}"
         pending_window: 7
       ignore_errors: true
