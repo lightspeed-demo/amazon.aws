@@ -10,17 +10,17 @@
         local_bucket_name: "{{ bucket_name | hash('md5')}}e-kms"
     # ============================================================
 
-    - name: 'Create a simple bucket'
+    - name: Create a simple bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
       register: output
 
-    - name: 'Enable aws:kms encryption with KMS master key'
+    - name: Enable aws:kms encryption with KMS master key
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
-        encryption: "aws:kms"
+        encryption: aws:kms
       register: output
 
     - assert:
@@ -29,11 +29,11 @@
           - output.encryption
           - output.encryption.SSEAlgorithm == 'aws:kms'
 
-    - name: 'Re-enable aws:kms encryption with KMS master key (idempotent)'
+    - name: Re-enable aws:kms encryption with KMS master key (idempotent)
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: present
-        encryption: "aws:kms"
+        encryption: aws:kms
       register: output
 
     - assert:
@@ -75,7 +75,7 @@
 
     - name: Delete encryption test s3 bucket
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
       register: output
 
@@ -87,6 +87,6 @@
   always:
     - name: Ensure all buckets are deleted
       s3_bucket:
-        name: '{{ local_bucket_name }}'
+        name: "{{ local_bucket_name }}"
         state: absent
-      ignore_errors: yes
+      ignore_errors: true
