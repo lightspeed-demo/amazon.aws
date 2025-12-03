@@ -1,3 +1,4 @@
+---
 - name: Test copy recursively object from one bucket to another one.
   block:
     - name: Create S3 bucket
@@ -42,7 +43,7 @@
         mode: copy
         copy_src:
           bucket: "{{ bucket_src }}"
-          prefix: "file"
+          prefix: file
       register: _copy_with_prefix
 
     - name: list objects from bucket
@@ -67,7 +68,7 @@
         mode: copy
         copy_src:
           bucket: "{{ bucket_src }}"
-          prefix: "file"
+          prefix: file
       register: _copy_with_prefix_idempotency
 
     - name: list objects from bucket
@@ -126,7 +127,7 @@
         that:
           - _copy_all_idempotency is not changed
           - _objects.s3_keys | length == 5
-  
+
   vars:
     bucket_src: "{{ bucket_name }}-recursive-src"
     bucket_dst: "{{ bucket_name }}-recursive-dst"
@@ -141,9 +142,9 @@
         content: |
           some content for file3.txt
       - object: testfile.py
-        content: "This is a sample text file"
+        content: This is a sample text file
       - object: another.txt
-        content: "another file to create into bucket"
+        content: another file to create into bucket
 
   always:
     - include_tasks: delete_bucket.yml
