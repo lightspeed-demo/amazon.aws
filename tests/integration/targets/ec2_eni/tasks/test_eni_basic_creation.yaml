@@ -31,12 +31,12 @@
 
 - name: Fetch ENI info (by ID)
   ec2_eni_info:
-    eni_id: '{{ eni_id_1 }}'
+    eni_id: "{{ eni_id_1 }}"
   register: eni_info
 
 - name: Assert that ec2_eni_info returns all the values we expect
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
   assert:
     that:
       - '"network_interfaces" in eni_info'
@@ -139,12 +139,12 @@
 - name: Fetch ENI info (using filter)
   ec2_eni_info:
     filters:
-      network-interface-id: '{{ eni_id_2 }}'
+      network-interface-id: "{{ eni_id_2 }}"
   register: eni_info
 
 - name: Assert that ec2_eni_info returns all the values we expect
   vars:
-    _interface_0: '{{ eni_info.network_interfaces[0] }}'
+    _interface_0: "{{ eni_info.network_interfaces[0] }}"
   assert:
     that:
       - '"network_interfaces" in eni_info'
@@ -216,8 +216,8 @@
 - name: Fetch ENI info with VPC filters - Available
   ec2_eni_info:
     filters:
-      vpc-id: '{{ vpc_id }}'
-      status: 'available'
+      vpc-id: "{{ vpc_id }}"
+      status: available
   register: eni_info
 
 - name: Assert that ec2_eni_info contains at least the two interfaces we expect
@@ -231,7 +231,7 @@
 - name: Fetch ENI info with VPC filters - VPC
   ec2_eni_info:
     filters:
-      vpc-id: '{{ vpc_id }}'
+      vpc-id: "{{ vpc_id }}"
   register: eni_info
 
 - name: Assert that ec2_eni_info contains at least the two interfaces we expect
@@ -243,7 +243,6 @@
       - eni_id_2 in ( eni_info.network_interfaces | selectattr('id') | map(attribute='id') | list )
       - ec2_ips[0] in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
       - ec2_ips[1] in ( eni_info.network_interfaces | map(attribute='private_ip_addresses') | flatten | map(attribute='private_ip_address') | list )
-
 
 # =========================================================
 
