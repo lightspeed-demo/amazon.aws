@@ -3,10 +3,10 @@
     # For creation test some basic behaviour
     - module_defaults:
         elb_classic_lb:
-          zones: ['{{ availability_zone_a }}', '{{ availability_zone_b }}']
-          listeners: '{{ default_listeners }}'
+          zones: ["{{ availability_zone_a }}", "{{ availability_zone_b }}"]
+          listeners: "{{ default_listeners }}"
           wait: true
-          scheme: 'internet-facing'
+          scheme: internet-facing
           # subnets: ['{{ subnet_a }}', '{{ subnet_b }}']
       block:
         - name: Create ELB
@@ -24,12 +24,11 @@
     - module_defaults:
         elb_classic_lb:
           # zones: ['{{ availability_zone_a }}', '{{ availability_zone_b }}']
-          listeners: '{{ default_listeners }}'
+          listeners: "{{ default_listeners }}"
           wait: true
-          scheme: 'internal'
-          subnets: ['{{ subnet_a }}', '{{ subnet_b }}']
+          scheme: internal
+          subnets: ["{{ subnet_a }}", "{{ subnet_b }}"]
       block:
-
         - name: Change Schema to internal (check_mode)
           elb_classic_lb:
             name: "{{ elb_name }}"
@@ -78,7 +77,7 @@
           elb_classic_lb:
             name: "{{ elb_name }}"
             state: present
-            schema: '{{ omit }}'
+            schema: "{{ omit }}"
           register: result
           check_mode: true
 
@@ -90,7 +89,7 @@
           elb_classic_lb:
             name: "{{ elb_name }}"
             state: present
-            schema: '{{ omit }}'
+            schema: "{{ omit }}"
           register: result
 
         - assert:
@@ -101,14 +100,13 @@
     # For creation test some basic behaviour
     - module_defaults:
         elb_classic_lb:
-          zones: ['{{ availability_zone_a }}', '{{ availability_zone_b }}']
-          listeners: '{{ default_listeners }}'
-          health_check: '{{ default_health_check }}'
+          zones: ["{{ availability_zone_a }}", "{{ availability_zone_b }}"]
+          listeners: "{{ default_listeners }}"
+          health_check: "{{ default_health_check }}"
           wait: true
-          scheme: 'internet-facing'
+          scheme: internet-facing
           # subnets: ['{{ subnet_a }}', '{{ subnet_b }}']
       block:
-
         - name: Change schema to internet-facing (check_mode)
           elb_classic_lb:
             name: "{{ elb_name }}"
@@ -157,7 +155,7 @@
           elb_classic_lb:
             name: "{{ elb_name }}"
             state: present
-            schema: '{{ omit }}'
+            schema: "{{ omit }}"
           register: result
           check_mode: true
 
@@ -169,7 +167,7 @@
           elb_classic_lb:
             name: "{{ elb_name }}"
             state: present
-            schema: '{{ omit }}'
+            schema: "{{ omit }}"
           register: result
 
         - assert:
@@ -178,7 +176,6 @@
               - result.elb.scheme == 'internet-facing'
 
   always:
-
     # ============================================================
     - name: remove the test load balancer
       elb_classic_lb:
